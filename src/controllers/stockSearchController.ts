@@ -13,6 +13,7 @@ export const getStockBySymbolController = async (
 
   try {
     const stockData = await getStockBySymbol(symbol)
+    console.log(stockData, ":stockData")
     res.status(200).json(stockData)
   } catch (error) {
     console.error(`Error fetching stock data for symbol: ${symbol}`, error)
