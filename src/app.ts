@@ -5,7 +5,7 @@ import sequelize from "./config/db"
 import "./models/Portfolio" // Portfolio 모델 등록
 
 import stockRoutes from "./routes/stockSearchRoutes" // ✅ 주식 검색 라우트 추가
-// import portfolioRoutes from "./routes/portfolioRoutes" // ✅ 포트폴리오 라우트 추가
+import portfolioRoutes from "./routes/portfolioAddRoutes" // ✅ 포트폴리오 라우트 추가
 
 // 데이터베이스 연결 테스트
 sequelize
@@ -28,11 +28,9 @@ const PORT = process.env.PORT || 3000
 
 app.use(express.json())
 
-// ✅ 주식 검색 API 라우트 등록
-app.use("/api", stockRoutes)
-
 // ✅ 포트폴리오 API 라우트 등록
-// app.use("/api", portfolioRoutes)
+// ✅ 주식 검색 API 라우트 등록
+app.use("/api", stockRoutes, portfolioRoutes)
 
 // 기본 라우트
 app.get("/", (req, res) => {
