@@ -1,0 +1,4 @@
+# Node.js 관련 파일 및 폴더 무시
+node_modules
+yarn.lock
+.idea
