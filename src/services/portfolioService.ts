@@ -9,7 +9,9 @@ export const addStockToPortfolioService = async (
   quantity: number,
 ) => {
   try {
-    console.log("[addStockToPortfolioService] 실행")
+    console.log(
+      `[addStockToPortfolioService] 실행 - ${symbol}, ${quantity}개 추가`,
+    )
     // 기존에 있는 주식인지 확인
     // 이미 보유 중인 주식인지 확인
     const existingStock = await Portfolio.findOne({ where: { symbol } })
@@ -26,18 +28,23 @@ export const addStockToPortfolioService = async (
       existingStock.buyPrice = newBuyPrice
       existingStock.quantity = newTotalQuantity
       await existingStock.save()
-      return existingStock
+    } else {
+      // ✅ 새로운 주식이면 포트폴리오에 추가
+      await Portfolio.create({ symbol, name, buyPrice, quantity })
     }
 
-    // ✅ 신규 주식 추가
-    const newStock = await Portfolio.create({
-      symbol, // ✅ 변경된 필드명
-      name, // ✅ 변경된 필드명
-      buyPrice,
+    // ✅ 매수 기록을 trade_history에 추가
+    // 매번 새로운 거래가 발생하면, 기존 데이터를 수정하는 게 아니라 새로운 거래 기록을 남겨야 함.
+    // 주식 매매는 독립적인 이벤트라서 기존 데이터를 업데이트하는 것이 아니라, 새로운 행(row)을 추가하는 게 맞음.
+    await TradeHistory.create({
+      symbol,
+      name,
+      tradeType: "BUY", // ✅ 매수 기록 추가
+      tradePrice: buyPrice,
       quantity,
     })
 
-    return newStock
+    return { message: `${symbol} 주식을 ${quantity}개 매수 완료.` }
   } catch (error) {
     console.error("Error adding stock to portfolio:", error)
     throw new Error("포트폴리오에 주식을 추가하는 중 오류 발생")
@@ -55,15 +62,17 @@ export const sellStockFromPortfolioService = async (
       `[sellStockFromPortfolioService] 실행 - symbol: ${symbol}, quantity: ${quantity}`,
     )
 
-    // 1️⃣ 해당 주식이 포트폴리오에 있는지 확인
+    // 1️⃣ 포트폴리오에서 해당 주식 조회
     const existingStock = await Portfolio.findOne({ where: { symbol } })
     if (!existingStock) {
-      throw new Error("포트폴리오에 해당 주식이 없습니다.")
+      throw new Error(`${symbol} 주식이 포트폴리오에 없습니다.`)
     }
 
-    // 2️⃣ 보유 수량보다 많이 매도하려는 경우 오류
+    // 2️⃣ 보유한 주식 수량보다 많이 팔 수 없음
     if (existingStock.quantity < quantity) {
-      throw new Error("보유 수량보다 많은 수량을 매도할 수 없습니다.")
+      throw new Error(
+        `보유 수량(${existingStock.quantity})보다 많이 매도할 수 없습니다.`,
+      )
     }
 
     // 3️⃣ 손익 계산 (수익 또는 손실)
@@ -71,26 +80,24 @@ export const sellStockFromPortfolioService = async (
     const profitLoss = (sellPrice - existingStock.buyPrice) * quantity
 
     // 4️⃣ 매도 기록 저장 (trade_history 테이블)
+    // 매번 새로운 거래가 발생하면, 기존 데이터를 수정하는 게 아니라 새로운 거래 기록을 남겨야 함.
+    // 주식 매매는 독립적인 이벤트라서 기존 데이터를 업데이트하는 것이 아니라, 새로운 행(row)을 추가하는 게 맞음.
     await TradeHistory.create({
       symbol,
       name: existingStock.name,
-      sellPrice,
+      tradeType: "SELL", // ✅ 매도 기록 추가
+      tradePrice: sellPrice,
       quantity,
-      profitLoss,
+      profitLoss, // 수익/손실 추가
     })
 
     // 5️⃣ 보유 수량 업데이트 또는 삭제
     if (existingStock.quantity === quantity) {
-      await existingStock.destroy() // 전량 매도 시 삭제
-      return {
-        message: `${symbol} 주식을 ${quantity}개 매도 완료. (전량 매도)`,
-      }
+      await existingStock.destroy() // 포트폴리오에서 삭제
+    } else {
+      existingStock.quantity -= quantity
+      await existingStock.save() // 남은 수량 저장
     }
-
-    // 현재 보유 수량에서 매도한 만큼 빼고 업데이트
-    existingStock.quantity -= quantity
-    await existingStock.save()
-
     // 프론트에서 "AAPL 주식을 5개 매도 완료. 총 수익: 50달러" 같은 메시지를 띄울 수 있게 리턴
     return {
       message: `${symbol} 주식을 ${quantity}개 매도 완료.`,

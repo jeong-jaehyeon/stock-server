@@ -13,9 +13,10 @@ class TradeHistory extends Model {
   public id!: number
   public symbol!: string
   public name!: string
-  public sellPrice!: number
+  public tradeType!: "BUY" | "SELL" // ✅ 매수/매도 구분
+  public tradePrice!: number
   public quantity!: number
-  public profitLoss!: number // 손익 계산
+  public profitLoss?: number // 매도 시에만 사용
 }
 
 TradeHistory.init(
@@ -33,7 +34,11 @@ TradeHistory.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    sellPrice: {
+    tradeType: {
+      type: DataTypes.ENUM("BUY", "SELL"), // ✅ 매수/매도 타입 추가
+      allowNull: false,
+    },
+    tradePrice: {
       type: DataTypes.FLOAT,
       allowNull: false,
     },
@@ -43,7 +48,7 @@ TradeHistory.init(
     },
     profitLoss: {
       type: DataTypes.FLOAT,
-      allowNull: false,
+      allowNull: true, // 매도할 때만 기록됨
     },
   },
   {
