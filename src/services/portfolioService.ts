@@ -109,3 +109,23 @@ export const sellStockFromPortfolioService = async (
     throw new Error("포트폴리오에서 주식을 매도하는 중 오류 발생")
   }
 }
+
+export const deleteStockFromPortfolioService = async (symbol: string) => {
+  const existingStock = await Portfolio.findOne({ where: { symbol } })
+
+  if (!existingStock) {
+    return {
+      message: `${symbol} 주식이 존재하지 않습니다.`,
+    }
+  }
+
+  // ✅ 해당 주식의 거래 기록 먼저 삭제
+  await TradeHistory.destroy({ where: { symbol: symbol } })
+
+  // ✅ 포트폴리오에서 주식 삭제
+  await existingStock.destroy()
+
+  return {
+    message: `${symbol} 주식을 삭제 완료.`,
+  }
+}
