@@ -1,4 +1,7 @@
-import express from "express"
+import express, { Request, Response, NextFunction } from "express"
+import "express-async-errors"
+import createError from "http-errors"
+import { HttpError } from "http-errors"
 import dotenv from "dotenv"
 dotenv.config() // 환경 변수 로드
 import sequelize from "./config/db"
@@ -35,6 +38,19 @@ app.use("/api", stockRoutes, portfolioRoutes)
 // 기본 라우트
 app.get("/", (req, res) => {
   res.send("Stock API is running!")
+})
+
+// ✅ 없는 라우트 처리 (404 에러 처리)
+app.use((req, res, next) => {
+  next(createError(404, "요청한 페이지를 찾을 수 없습니다."))
+})
+
+// ✅ 글로벌 에러 핸들링 미들웨어
+app.use((err: HttpError, req: Request, res: Response, _next: NextFunction) => {
+  console.error(err.stack)
+  res.status(err.status || 500).json({
+    message: err.message || "서버 내부 오류가 발생했습니다.",
+  })
 })
 
 // 서버 실행

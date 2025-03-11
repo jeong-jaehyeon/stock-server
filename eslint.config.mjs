@@ -26,6 +26,11 @@ export default [
     },
     rules: {
       semi: ["error", "never"], // 세미콜론 사용 금지
+      // ✅ _로 시작하는 unused 변수 무시
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_" },
+      ],
       "prettier/prettier": "error", // Prettier 규칙을 ESLint에서 에러로 표시
     },
   },
