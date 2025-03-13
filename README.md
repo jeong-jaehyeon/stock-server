@@ -228,6 +228,27 @@ Postman으로 API를 테스트할 수 있습니다.
 
 ---
 
-## 📌 8. 기타
+## 📌 8. 데이터베이스 구조
+
+### ✅ 테이블 1: `portfolios`
+- 사용자의 **현재 보유 주식 정보**를 저장하는 테이블입니다.
+### ✅ 테이블 2: `trade_history`
+- 주식의 **매수/매도 내역**을 기록하는 테이블입니다.
+- `portfolioId`를 통해 `portfolios` 테이블과 **1:N 관계**로 연결됩니다.
+
+### ✅ 관계 (Associations)
+- `Portfolio`(1) ↔ `TradeHistory`(N) 관계
+- 하나의 포트폴리오에 여러 개의 거래 기록이 연결됩니다.
+
+```typescript
+Portfolio.hasMany(TradeHistory, { foreignKey: 'portfolioId', onDelete: 'CASCADE' })
+TradeHistory.belongsTo(Portfolio, { foreignKey: 'portfolioId' })
+```
+
+- 포트폴리오 삭제 시, 관련된 거래 기록도 함께 삭제됩니다.
+
+---
+
+## 📌 9. 기타
 - **문의:** `wolgus104@naver.com`
 - **API 문서:** Postman 링크 추가 예정
