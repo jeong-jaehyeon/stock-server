@@ -1,5 +1,6 @@
 import { DataTypes, Model } from "sequelize"
 import sequelize from "../config/db"
+import Portfolio from "./Portfolio"
 
 /*
 매도를 한다면, 손익 계산 및 매매 기록이 필요하기 때문에 trade_history 테이블
@@ -11,12 +12,13 @@ import sequelize from "../config/db"
 
 class TradeHistory extends Model {
   public id!: number
+  public portfolioId!: number // ✅ 외래키 설정
   public symbol!: string
   public name!: string
-  public tradeType!: "BUY" | "SELL" // ✅ 매수/매도 구분
+  public tradeType!: "BUY" | "SELL"
   public tradePrice!: number
   public quantity!: number
-  public profitLoss?: number // 매도 시에만 사용
+  public profitLoss?: number
 }
 
 TradeHistory.init(
@@ -25,6 +27,15 @@ TradeHistory.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
+    },
+    portfolioId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: Portfolio,
+        key: "id",
+      },
+      onDelete: "CASCADE", // 포트폴리오가 삭제되면 히스토리도 삭제
     },
     symbol: {
       type: DataTypes.STRING,
@@ -35,7 +46,7 @@ TradeHistory.init(
       allowNull: false,
     },
     tradeType: {
-      type: DataTypes.ENUM("BUY", "SELL"), // ✅ 매수/매도 타입 추가
+      type: DataTypes.ENUM("BUY", "SELL"),
       allowNull: false,
     },
     tradePrice: {
@@ -48,7 +59,7 @@ TradeHistory.init(
     },
     profitLoss: {
       type: DataTypes.FLOAT,
-      allowNull: true, // 매도할 때만 기록됨
+      allowNull: true,
     },
   },
   {
@@ -56,5 +67,11 @@ TradeHistory.init(
     tableName: "trade_history",
   },
 )
+
+// TradeHistory.ts
+TradeHistory.belongsTo(Portfolio, {
+  foreignKey: "portfolioId", // ✅ FK 컬럼명 지정
+  onDelete: "CASCADE", // ✅ 포트폴리오 삭제 시 관련 거래 기록도 삭제
+})
 
 export default TradeHistory

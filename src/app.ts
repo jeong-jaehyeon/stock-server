@@ -5,7 +5,7 @@ import { HttpError } from "http-errors"
 import dotenv from "dotenv"
 dotenv.config() // 환경 변수 로드
 import sequelize from "./config/db"
-import "./models/Portfolio" // Portfolio 모델 등록
+import "./models" // Portfolio 모델 등록
 
 import stockRoutes from "./routes/stockSearchRoutes" // ✅ 주식 검색 라우트 추가
 import portfolioRoutes from "./routes/portfolioRoutes" // ✅ 포트폴리오 라우트 추가

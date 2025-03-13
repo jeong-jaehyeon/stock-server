@@ -14,7 +14,7 @@ export const addStockToPortfolioService = async (
     )
     // 기존에 있는 주식인지 확인
     // 이미 보유 중인 주식인지 확인
-    const existingStock = await Portfolio.findOne({ where: { symbol } })
+    let existingStock = await Portfolio.findOne({ where: { symbol } })
 
     if (existingStock) {
       // 이미 보유 중인 주식이면 개수와 평균 매수 단가 업데이트
@@ -29,8 +29,13 @@ export const addStockToPortfolioService = async (
       existingStock.quantity = newTotalQuantity
       await existingStock.save()
     } else {
-      // ✅ 새로운 주식이면 포트폴리오에 추가
-      await Portfolio.create({ symbol, name, buyPrice, quantity })
+      // ✅ 3. 존재하지 않으면 새로 추가
+      existingStock = await Portfolio.create({
+        symbol,
+        name,
+        buyPrice,
+        quantity,
+      })
     }
 
     // ✅ 매수 기록을 trade_history에 추가
@@ -42,6 +47,7 @@ export const addStockToPortfolioService = async (
       tradeType: "BUY", // ✅ 매수 기록 추가
       tradePrice: buyPrice,
       quantity,
+      portfolioId: existingStock.id, // ✅ portfolioId 추가
     })
 
     return { message: `${symbol} 주식을 ${quantity}개 매수 완료.` }
@@ -89,6 +95,7 @@ export const sellStockFromPortfolioService = async (
       tradePrice: sellPrice,
       quantity,
       profitLoss, // 수익/손실 추가
+      portfolioId: existingStock.id, // ✅ portfolioId 추가
     })
 
     // 5️⃣ 보유 수량 업데이트 또는 삭제
