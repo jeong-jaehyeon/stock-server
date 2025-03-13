@@ -13,7 +13,7 @@ export const addStockToPortfolio = async (
 ): Promise<void> => {
   const { symbol, name, buyPrice, quantity } = req.body
 
-  if (!symbol || !name || !buyPrice || !quantity) {
+  if (!symbol || !name || buyPrice === undefined || quantity === undefined) {
     res.status(400).json({ message: "모든 필드를 입력해야 합니다." })
     return
   }
@@ -46,7 +46,7 @@ export const sellStockFromPortfolio = async (
   const { symbol } = req.params
   const { sellPrice, quantity } = req.body
 
-  if (!symbol || !sellPrice || !quantity) {
+  if (!symbol || sellPrice === undefined || quantity === undefined) {
     res
       .status(400)
       .json({ message: "symbol, sellPrice, quantity는 필수 입력값입니다." })
