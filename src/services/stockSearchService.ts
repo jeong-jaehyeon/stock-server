@@ -1,7 +1,9 @@
 import axios from "axios"
+import createError from "http-errors"
 
 const BASE_URL = "https://api.twelvedata.com/time_series" // Twelve Data API 기본 URL
 const API_KEY = process.env.TWELVE_DATA_API_KEY // 환경 변수에서 API 키 가져오기
+const BASE_PRICE_URL = "https://api.twelvedata.com/price" // Twelve Data API 기본 URL
 
 // 모든 주식 정보 가져오기 (Twelve Data는 종목 리스트를 제공하지 않음 -> 특정 종목별 조회 필요)
 export const getStockBySymbol = async (symbol: string) => {
@@ -120,4 +122,28 @@ export const getStockName = async (symbol: string): Promise<string> => {
     console.error("Error fetching stock name:", error)
     return "Unknown"
   }
+}
+
+/**
+ * ✅ 특정 주식의 현재 가격을 Twelve Data API를 통해 가져오는 함수
+ *
+ * @param symbol - 주식 심볼 (예: AAPL, TSLA)
+ * @returns 주식의 현재 가격 (숫자형)
+ * @throws 404 에러 - API에서 해당 심볼의 주식 데이터를 찾지 못한 경우
+ */
+export const getStockPriceFromAPI = async (symbol: string): Promise<number> => {
+  const response = await axios.get(BASE_PRICE_URL, {
+    params: {
+      symbol,
+      apikey: API_KEY,
+    },
+  })
+
+  // ✅ 주식 데이터가 없을 경우 에러 발생
+  if (!response.data || !response.data.price) {
+    throw createError(404, `주식 데이터가 존재하지 않습니다: ${symbol}`)
+  }
+
+  // ✅ price를 숫자형으로 반환
+  return parseFloat(response.data.price)
 }
