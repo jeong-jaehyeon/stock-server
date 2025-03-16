@@ -1,9 +1,8 @@
 import axios from "axios"
 import createError from "http-errors"
+import { TWELVE_DATA_CONFIG } from "../config/apiConfig"
 
-const BASE_URL = "https://api.twelvedata.com/time_series" // Twelve Data API 기본 URL
 const API_KEY = process.env.TWELVE_DATA_API_KEY // 환경 변수에서 API 키 가져오기
-const BASE_PRICE_URL = "https://api.twelvedata.com/price" // Twelve Data API 기본 URL
 
 // 모든 주식 정보 가져오기 (Twelve Data는 종목 리스트를 제공하지 않음 -> 특정 종목별 조회 필요)
 export const getStockBySymbol = async (symbol: string) => {
@@ -13,7 +12,7 @@ export const getStockBySymbol = async (symbol: string) => {
     }
 
     // 주식 데이터 요청
-    const response = await axios.get(BASE_URL, {
+    const response = await axios.get(TWELVE_DATA_CONFIG.BASE_URL, {
       params: {
         symbol,
         apikey: API_KEY,
@@ -76,7 +75,7 @@ export const getStockBySymbol = async (symbol: string) => {
 export const getMultipleStocks = async (symbols: string[]) => {
   try {
     // 여러 종목 심볼을 콤마로 연결하여 요청
-    const response = await axios.get(`${BASE_URL}/time_series`, {
+    const response = await axios.get(TWELVE_DATA_CONFIG.TIME_SERIES_URL, {
       params: {
         symbol: symbols.join(","), // 예: "AAPL,TSLA,MSFT"
         interval: "1min",
@@ -100,11 +99,10 @@ interface StockInfo {
 
 // ✅ 주식 심볼을 이용하여 주식의 정식 명칭(name) 가져오기
 export const getStockName = async (symbol: string): Promise<string> => {
-  const BASE_URL = "https://api.twelvedata.com"
   try {
     console.log(`[getStockName] 실행, 요청 심볼: ${symbol}`)
 
-    const response = await axios.get(`${BASE_URL}/stocks`, {
+    const response = await axios.get(TWELVE_DATA_CONFIG.STOCKS_URL, {
       params: { apikey: API_KEY },
     })
 
@@ -132,7 +130,7 @@ export const getStockName = async (symbol: string): Promise<string> => {
  * @throws 404 에러 - API에서 해당 심볼의 주식 데이터를 찾지 못한 경우
  */
 export const getStockPriceFromAPI = async (symbol: string): Promise<number> => {
-  const response = await axios.get(BASE_PRICE_URL, {
+  const response = await axios.get(TWELVE_DATA_CONFIG.PRICE_URL, {
     params: {
       symbol,
       apikey: API_KEY,
