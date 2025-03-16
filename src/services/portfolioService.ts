@@ -1,5 +1,6 @@
 import Portfolio from "../models/Portfolio"
 import TradeHistory from "../models/TradeHistory"
+import { getStockPriceFromAPI } from "./stockSearchService"
 
 // 포트폴리오에 주식 매수 (기존 주식이면 평균 매수 단가 업데이트)
 export const addStockToPortfolioService = async (
@@ -135,4 +136,33 @@ export const deleteStockFromPortfolioService = async (symbol: string) => {
   return {
     message: `${symbol} 주식을 삭제 완료.`,
   }
+}
+
+/**
+ * ✅ 포트폴리오 요약 서비스
+ * - 사용자의 포트폴리오에 있는 모든 주식의 현재 가치와 손익을 계산하여 반환
+ */
+export const getPortfolioSummaryService = async () => {
+  // 포트폴리오에 등록된 모든 주식 가져오기
+  const portfolios = await Portfolio.findAll()
+
+  // 각 주식의 현재가와 손익을 계산하여 반환
+  return await Promise.all(
+    portfolios.map(async (stock) => {
+      // ✅ Twelve Data API를 통해 실시간 주가 가져오기
+      const currentPrice = await getStockPriceFromAPI(stock.symbol)
+
+      // ✅ 손익 계산: (현재가 - 매수 단가) * 수량
+      const profitLoss = (currentPrice - stock.buyPrice) * stock.quantity
+
+      return {
+        symbol: stock.symbol,
+        name: stock.name,
+        quantity: stock.quantity,
+        buyPrice: stock.buyPrice,
+        currentPrice,
+        profitLoss,
+      }
+    }),
+  )
 }

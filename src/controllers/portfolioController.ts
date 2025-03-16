@@ -3,6 +3,7 @@ import {
   addStockToPortfolioService,
   deleteStockFromPortfolioService,
   sellStockFromPortfolioService,
+  getPortfolioSummaryService,
 } from "../services/portfolioService"
 import createError from "http-errors"
 
@@ -84,4 +85,9 @@ export const deleteStockFromPortfolio = async (
   }
 
   res.status(200).json(result)
+}
+
+export const getPortfolioSummary = async (req: Request, res: Response) => {
+  const summary = await getPortfolioSummaryService()
+  res.status(200).json(summary)
 }
