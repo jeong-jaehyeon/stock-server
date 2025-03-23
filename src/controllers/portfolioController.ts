@@ -12,7 +12,7 @@ import { sendSuccessResponse } from "../utils/sendSuccessResponse"
 export const addStockToPortfolio = async (
   req: Request,
   res: Response,
-): Promise<Response> => {
+): Promise<void> => {
   const { symbol, name, buyPrice, quantity } = req.body
 
   if (!symbol || !name || buyPrice === undefined || quantity === undefined) {
@@ -34,7 +34,7 @@ export const addStockToPortfolio = async (
     quantity,
   )
 
-  return sendSuccessResponse(
+  sendSuccessResponse(
     res,
     `${symbol} 주식을 포트폴리오에 매수하였습니다.`,
     addedStock,
@@ -46,7 +46,7 @@ export const addStockToPortfolio = async (
 export const sellStockFromPortfolio = async (
   req: Request,
   res: Response,
-): Promise<Response> => {
+): Promise<void> => {
   const { symbol } = req.params
   const { sellPrice, quantity } = req.body
 
@@ -68,7 +68,7 @@ export const sellStockFromPortfolio = async (
     Number(quantity),
   )
 
-  return sendSuccessResponse(
+  sendSuccessResponse(
     res,
     `${symbol} 주식을 ${quantity}개 매도했습니다.`,
     soldStock,
@@ -80,7 +80,7 @@ export const sellStockFromPortfolio = async (
 export const deleteStockFromPortfolio = async (
   req: Request,
   res: Response,
-): Promise<Response> => {
+): Promise<void> => {
   const { symbol } = req.params
 
   const result = await deleteStockFromPortfolioService(symbol)
@@ -89,14 +89,14 @@ export const deleteStockFromPortfolio = async (
     throw createError(404, "존재하지 않는 주식은 삭제할 수 없습니다.")
   }
 
-  return sendSuccessResponse(res, result.message, result)
+  sendSuccessResponse(res, result.message, result)
 }
 
 // ✅ 포트폴리오 요약 조회 컨트롤러
 export const getPortfolioSummary = async (
   _req: Request,
   res: Response,
-): Promise<Response> => {
+): Promise<void> => {
   const summary = await getPortfolioSummaryService()
-  return sendSuccessResponse(res, "포트폴리오 요약 조회 성공", summary)
+  sendSuccessResponse(res, "포트폴리오 요약 조회 성공", summary)
 }

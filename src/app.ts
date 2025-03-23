@@ -31,9 +31,8 @@ const PORT = process.env.PORT || 3000
 
 app.use(express.json())
 
-// ✅ 포트폴리오 API 라우트 등록
-// ✅ 주식 검색 API 라우트 등록
-app.use("/api", stockRoutes, portfolioRoutes)
+app.use("/api/stocks", stockRoutes)
+app.use("/api/portfolio", portfolioRoutes)
 
 // 기본 라우트
 app.get("/", (req, res) => {
