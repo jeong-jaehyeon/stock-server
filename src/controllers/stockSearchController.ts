@@ -3,25 +3,25 @@ import {
   getStockBySymbol,
   getMultipleStocks,
 } from "../services/stockSearchService"
+import { StatusCodes } from "../utils/statusCodes"
+import { sendSuccessResponse } from "../utils/sendSuccessResponse"
+import createError from "http-errors"
 
 // 특정 주식 데이터 가져오기
 export const getStockBySymbolController = async (
   req: Request,
   res: Response,
-) => {
+): Promise<void> => {
   const { symbol } = req.params
 
-  try {
-    const stockData = await getStockBySymbol(symbol)
-    console.log(stockData, ":stockData")
-    res.status(200).json(stockData)
-  } catch (error) {
-    console.error(`Error fetching stock data for symbol: ${symbol}`, error)
-    res.status(500).json({
-      message: `Failed to fetch stock data for symbol: ${symbol}`,
-      error: error instanceof Error ? error.message : error,
-    })
-  }
+  const stockData = await getStockBySymbol(symbol)
+  console.log(stockData, ":stockData")
+  sendSuccessResponse(
+    res,
+    `${symbol} 주식을 검색했습니다.`,
+    stockData,
+    StatusCodes.OK,
+  )
 }
 
 // 여러 주식 데이터 가져오기
@@ -32,18 +32,14 @@ export const getMultipleStocksController = async (
   const { symbols } = req.query
 
   if (!symbols) {
-    res.status(400).json({ message: "Symbols query parameter is required" })
-    return
+    throw createError(StatusCodes.BAD_REQUEST, "모든 필드를 입력해야 합니다.")
   }
 
-  try {
-    const stockData = await getMultipleStocks((symbols as string).split(","))
-    res.status(200).json(stockData)
-  } catch (error) {
-    console.error("Error fetching multiple stocks data:", error)
-    res.status(500).json({
-      message: "Failed to fetch multiple stocks data",
-      error: error instanceof Error ? error.message : error,
-    })
-  }
+  const stockData = await getMultipleStocks((symbols as string).split(","))
+  sendSuccessResponse(
+    res,
+    `모든 주식을 검색했습니다.`,
+    stockData,
+    StatusCodes.OK,
+  )
 }
