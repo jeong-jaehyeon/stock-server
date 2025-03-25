@@ -31,10 +31,11 @@
     "mariadb": "^3.4.0",
     "morgan": "^1.10.0",
     "nvm": "^0.0.4",
-    "sequelize": "^6.37.5"
+    "sequelize": "^6.37.5",
+    "tsconfig-paths": "^4.2.0"
   },
   "scripts": {
     "start": "node dist/app.js",
-    "dev": "nodemon src/app.ts"
+    "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/app.ts"
   }
 }
