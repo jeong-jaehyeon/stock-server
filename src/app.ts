@@ -6,6 +6,7 @@ import dotenv from "dotenv"
 dotenv.config() // 환경 변수 로드
 import sequelize from "./config/db"
 import "./models" // Portfolio 모델 등록
+import { StatusCodes } from "@utils/statusCodes"
 
 import stockRoutes from "./routes/stockSearchRoutes" // ✅ 주식 검색 라우트 추가
 import portfolioRoutes from "./routes/portfolioRoutes" // ✅ 포트폴리오 라우트 추가
@@ -41,13 +42,13 @@ app.get("/", (req, res) => {
 
 // ✅ 없는 라우트 처리 (404 에러 처리)
 app.use((req, res, next) => {
-  next(createError(404, "요청한 페이지를 찾을 수 없습니다."))
+  next(createError(StatusCodes.NOT_FOUND, "요청한 페이지를 찾을 수 없습니다."))
 })
 
 // ✅ 글로벌 에러 핸들링 미들웨어
 app.use((err: HttpError, req: Request, res: Response, _next: NextFunction) => {
   console.error(err.stack)
-  res.status(err.status || 500).json({
+  res.status(err.status || StatusCodes.INTERNAL_SERVER_ERROR).json({
     message: err.message || "서버 내부 오류가 발생했습니다.",
   })
 })
