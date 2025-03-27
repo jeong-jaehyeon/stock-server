@@ -1,12 +1,28 @@
-import { DataTypes, Model } from "sequelize"
+// models/Portfolio.ts
+
+import { DataTypes, Model, Optional } from "sequelize"
 import sequelize from "../config/db"
 
-class Portfolio extends Model {
-  public id!: number
-  public symbol!: string
-  public name!: string
-  public buyPrice!: number
-  public quantity!: number
+// 타입 정의
+interface PortfolioAttributes {
+  id: number
+  symbol: string
+  name: string
+  buyPrice: number
+  quantity: number
+}
+
+type PortfolioCreationAttributes = Optional<PortfolioAttributes, "id">
+
+class Portfolio
+  extends Model<PortfolioAttributes, PortfolioCreationAttributes>
+  implements PortfolioAttributes
+{
+  declare id: number
+  declare symbol: string
+  declare name: string
+  declare buyPrice: number
+  declare quantity: number
 }
 
 Portfolio.init(

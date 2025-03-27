@@ -4,10 +4,10 @@ import {
   deleteStockFromPortfolioService,
   sellStockFromPortfolioService,
   getPortfolioSummaryService,
-} from "../services/portfolioService"
+} from "@services/portfolioService"
 import createError from "http-errors"
-import { StatusCodes } from "../utils/statusCodes"
-import { sendSuccessResponse } from "../utils/sendSuccessResponse"
+import { StatusCodes } from "@utils/statusCodes"
+import { sendSuccessResponse } from "@utils/sendSuccessResponse"
 
 // ✅ 주식 매수 컨트롤러
 export const addStockToPortfolio = async (
