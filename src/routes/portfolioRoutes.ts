@@ -4,7 +4,7 @@ import {
   deleteStockFromPortfolio,
   sellStockFromPortfolio,
   getPortfolioSummary,
-} from "../controllers/portfolioController"
+} from "@controllers/portfolioController"
 
 const router = Router()
 

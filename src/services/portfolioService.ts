@@ -1,6 +1,7 @@
 import Portfolio from "../models/Portfolio"
 import TradeHistory from "../models/TradeHistory"
 import { getStockPriceFromAPI } from "./stockSearchService"
+import logger from "@utils/logger" // pino 로거 import
 
 // 포트폴리오에 주식 매수 (기존 주식이면 평균 매수 단가 업데이트)
 export const addStockToPortfolioService = async (
@@ -10,7 +11,7 @@ export const addStockToPortfolioService = async (
   quantity: number,
 ) => {
   try {
-    console.log(
+    logger.info(
       `[addStockToPortfolioService] 실행 - ${symbol}, ${quantity}개 추가`,
     )
     // 기존에 있는 주식인지 확인
@@ -37,6 +38,7 @@ export const addStockToPortfolioService = async (
         buyPrice,
         quantity,
       })
+      logger.info(`[${symbol}] 신규 주식 추가 완료`)
     }
 
     // ✅ 매수 기록을 trade_history에 추가
@@ -50,10 +52,10 @@ export const addStockToPortfolioService = async (
       quantity,
       portfolioId: existingStock.id, // ✅ portfolioId 추가
     })
-
+    logger.info(`[${symbol}] 매수 기록 생성 완료 (수량: ${quantity})`)
     return { message: `${symbol} 주식을 ${quantity}개 매수 완료.` }
   } catch (error) {
-    console.error("Error adding stock to portfolio:", error)
+    logger.error("Error adding stock to portfolio:", error)
     throw new Error("포트폴리오에 주식을 추가하는 중 오류 발생")
   }
 }
