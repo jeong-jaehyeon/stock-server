@@ -31,6 +31,8 @@
     "mariadb": "^3.4.0",
     "morgan": "^1.10.0",
     "nvm": "^0.0.4",
+    "pino": "^9.6.0",
+    "pino-pretty": "^13.0.0",
     "sequelize": "^6.37.5",
     "tsconfig-paths": "^4.2.0"
   },

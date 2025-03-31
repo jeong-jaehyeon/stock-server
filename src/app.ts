@@ -10,6 +10,9 @@ import { StatusCodes } from "@utils/statusCodes"
 
 import stockRoutes from "./routes/stockSearchRoutes" // ✅ 주식 검색 라우트 추가
 import portfolioRoutes from "./routes/portfolioRoutes" // ✅ 포트폴리오 라우트 추가
+import logger from "@utils/logger"
+
+logger.info("🚀 app 시작 준비 완료")
 
 // 데이터베이스 연결 테스트
 sequelize
