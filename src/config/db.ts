@@ -1,7 +1,9 @@
+// config/db.ts
 import { Sequelize } from "sequelize"
 import dotenv from "dotenv"
+import logger from "@utils/logger"
 
-dotenv.config() // .env 파일 로드
+dotenv.config()
 
 const sequelize = new Sequelize(
   process.env.DB_NAME!,
@@ -9,12 +11,11 @@ const sequelize = new Sequelize(
   process.env.DB_PASSWORD!,
   {
     host: process.env.DB_HOST!,
-    dialect: "mariadb", // MariaDB 사용
+    dialect: "mariadb",
     dialectOptions: {
-      // ✅ 문제 해결: 공개 키 자동 검색 허용
       allowPublicKeyRetrieval: true,
     },
-    logging: false, // 로그 출력 비활성화
+    logging: (msg) => logger.debug(msg), // ✅ pino 로깅 사용
     pool: {
       max: 10,
       min: 0,
@@ -22,6 +23,20 @@ const sequelize = new Sequelize(
     },
   },
 )
+
+// ✅ 연결 및 모델 동기화 함수
+export const initDatabase = async () => {
+  try {
+    await sequelize.authenticate()
+    logger.info("✅ DB 연결 성공")
+    await sequelize.sync({ alter: true }) // 필요 시 alter → false
+    logger.info("✅ 모든 모델 동기화 완료")
+  } catch (error) {
+    logger.error("❌ DB 연결 실패")
+    logger.error(error)
+    process.exit(1)
+  }
+}
 
 export default sequelize
 
