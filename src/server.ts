@@ -11,7 +11,8 @@ import { StatusCodes } from "@utils/statusCodes"
 
 import stockRoutes from "./routes/stockSearchRoutes"
 import portfolioRoutes from "./routes/portfolioRoutes"
-import "./models" // DB 모델 등록
+import "./models"
+import { requestLogger } from "@middleware/requestLogger" // DB 모델 등록
 
 export const createServer = () => {
   const app = express()
@@ -21,6 +22,9 @@ export const createServer = () => {
 
   // 미들웨어
   app.use(express.json())
+
+  // 로그
+  app.use(requestLogger)
 
   // 라우트
   app.use("/api/stocks", stockRoutes)

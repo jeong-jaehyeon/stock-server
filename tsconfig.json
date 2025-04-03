@@ -10,7 +10,8 @@
       "@controllers/*": ["controllers/*"],
       "@services/*": ["services/*"],
       "@models/*": ["models/*"],
-      "@config/*": ["config/*"]
+      "@config/*": ["config/*"],
+      "@middleware/*": ["middleware/*"],
     },
     "esModuleInterop": true,
     "resolveJsonModule": true,
