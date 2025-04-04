@@ -7,9 +7,9 @@ import {
 const router = Router()
 
 // 특정 주식 데이터 가져오기
-router.get("/stocks/:symbol", getStockBySymbolController)
+router.get("/:symbol", getStockBySymbolController)
 
 // 여러 주식 데이터 가져오기
-router.get("/stocks", getMultipleStocksController)
+router.get("/", getMultipleStocksController)
 
 export default router

@@ -2,9 +2,9 @@ import { Request, Response } from "express"
 import {
   getStockBySymbol,
   getMultipleStocks,
-} from "../services/stockSearchService"
-import { StatusCodes } from "../utils/statusCodes"
-import { sendSuccessResponse } from "../utils/sendSuccessResponse"
+} from "@services/stockSearchService"
+import { StatusCodes } from "@utils/statusCodes"
+import { sendSuccessResponse } from "@utils/sendSuccessResponse"
 import createError from "http-errors"
 
 // 특정 주식 데이터 가져오기

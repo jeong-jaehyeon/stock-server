@@ -12,7 +12,7 @@ export const getStockBySymbol = async (symbol: string) => {
     }
 
     // 주식 데이터 요청
-    const response = await axios.get(TWELVE_DATA_CONFIG.BASE_URL, {
+    const response = await axios.get(TWELVE_DATA_CONFIG.TIME_SERIES_URL, {
       params: {
         symbol,
         apikey: API_KEY,
