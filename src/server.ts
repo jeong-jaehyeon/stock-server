@@ -8,17 +8,16 @@ dotenv.config()
 import logger from "@utils/logger"
 import { initDatabase } from "@config/db"
 import { StatusCodes } from "@utils/statusCodes"
-
 import stockRoutes from "./routes/stockSearchRoutes"
 import portfolioRoutes from "./routes/portfolioRoutes"
 import "./models"
 import { requestLogger } from "@middleware/requestLogger" // DB 모델 등록
 
-export const createServer = () => {
+export const createServer = async () => {
   const app = express()
 
   // DB 연결
-  initDatabase()
+  await initDatabase()
 
   // 미들웨어
   app.use(express.json())
