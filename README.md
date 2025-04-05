@@ -48,9 +48,26 @@ yarn dev
 
 ---
 
-## 📌 3. API 사용법
+## 📌 3. 프로젝트 구조
 
-### **1️⃣ 주식 검색[README_updated.md](../../../Downloads/README_updated.md) (실시간 시세 조회)**
+```
+📦 src
+├── config             # 데이터베이스, 외부 설정 관련 파일
+├── controllers        # 요청을 처리하는 컨트롤러 함수들
+├── middleware         # 커스텀 미들웨어 (예: 로깅)
+├── models             # Sequelize 모델 정의
+├── routes             # API 라우트 정의
+├── services           # 비즈니스 로직 담당
+├── utils              # 헬퍼 유틸리티 함수 및 상수
+├── app.ts             # 앱 설정 및 서버 실행 준비
+├── server.ts          # 서버 생성 및 미들웨어 설정
+└── ...
+```
+
+
+## 📌 4. API 사용법
+
+### **1️⃣ 주식 검색 (실시간 시세 조회)**
 📌 특정 주식의 실시간 데이터를 조회합니다.
 ```http
 GET /api/stocks?symbol=AAPL
@@ -171,39 +188,19 @@ DELETE /api/portfolio/AAPL
 
 ---
 
-## 📌 4. 현재까지 진행한 작업
-✅ Express + TypeScript + Sequelize 초기 설정
-✅ MariaDB 연결 및 stock_db 생성
-✅ Twelve Data API 연동하여 주식 데이터 조회 구현
-✅ `Portfolio`, `TradeHistory` 테이블 생성 및 관계 설정 완료
-✅ 포트폴리오 CRUD 기능 구현
-✅ 매수/매도 내역 기록 및 수익률 계산 추가
-✅ 오류 핸들링 개선 (http-errors, express-async-errors 적용)
-✅ Pino 로깅 도입 및 API 요청/응답 전반 로그 기록 기능 구현
-✅ Sequelize 초기화 로직 유틸 파일(@config/db)로 분리
-✅ HTTP 상태 코드 유틸(@utils/statusCodes) 적용
----
-
-## 📌 5. 앞으로 할 작업
-🔜 포트폴리오 수정 기능 (단가 조정 등)
-🔜 거래 내역 리스트 API
-🔜 Swagger 또는 Postman API 문서 추가
-🔜 프론트엔드 개발 연동
----
-
-## 📌 6. API 테스트 (Postman)
+## 📌 5. API 테스트 (Postman)
 Postman으로 API를 테스트할 수 있습니다.  
 📌 **Postman 링크 추가 예정**
 ---
 
-## 📌 7. 에러 핸들링 개선 (2025-03-11)
+## 📌 6. 에러 핸들링 개선 (2025-03-11)
 
-- ✅ `express-async-errors` 적용  
-  - 비동기 함수에서 발생하는 에러가 자동으로 `Express`의 에러 핸들러로 전달됨.  
+- ✅ `express-async-errors` 적용
+  - 비동기 함수에서 발생하는 에러가 자동으로 `Express`의 에러 핸들러로 전달됨.
   - `try-catch`를 일일이 작성하지 않아도 되므로 코드가 깔끔해짐.
 
-- ✅ `http-errors` 적용  
-  - 명확하고 일관된 에러 메시지와 HTTP 상태 코드를 반환하도록 개선.  
+- ✅ `http-errors` 적용
+  - 명확하고 일관된 에러 메시지와 HTTP 상태 코드를 반환하도록 개선.
   - 예시:
     ```ts
     import createError from "http-errors"
@@ -225,7 +222,7 @@ Postman으로 API를 테스트할 수 있습니다.
 
 ---
 
-## 📌 8. 데이터베이스 구조
+## 📌 7. 데이터베이스 구조
 
 ### ✅ 테이블 1: `portfolios`
 - 사용자의 **현재 보유 주식 정보**를 저장하는 테이블입니다.
@@ -246,7 +243,7 @@ TradeHistory.belongsTo(Portfolio, { foreignKey: 'portfolioId' })
 
 ---
 
-## 📌 9. 로깅시스템
+## 📌 8. 로깅시스템
 - ✅ pino 기반으로 빠르고 효율적인 로그 기록
 - ✅ @utils/logger.ts 파일에서 기본 로거 정의
 - ✅ API 요청 및 응답 로그는 requestLogger 미들웨어에서 처리
@@ -257,7 +254,28 @@ TradeHistory.belongsTo(Portfolio, { foreignKey: 'portfolioId' })
 [2025-04-04 13:54:46.910] INFO: ✅ 응답 완료: POST /api/portfolio 201 - 17.3ms
 ```
 
-## 📌 10. 기타
+## 📌 9. 현재까지 진행한 작업
+✅ Express + TypeScript + Sequelize 초기 설정
+✅ MariaDB 연결 및 stock_db 생성
+✅ Twelve Data API 연동하여 주식 데이터 조회 구현
+✅ `Portfolio`, `TradeHistory` 테이블 생성 및 관계 설정 완료
+✅ 포트폴리오 CRUD 기능 구현
+✅ 매수/매도 내역 기록 및 수익률 계산 추가
+✅ 오류 핸들링 개선 (http-errors, express-async-errors 적용)
+✅ Pino 로깅 도입 및 API 요청/응답 전반 로그 기록 기능 구현
+✅ Sequelize 초기화 로직 유틸 파일(@config/db)로 분리
+✅ HTTP 상태 코드 유틸(@utils/statusCodes) 적용
+---
+
+## 📌 10. 앞으로 할 작업
+🔜 포트폴리오 수정 기능 (단가 조정 등)
+🔜 거래 내역 리스트 API
+🔜 Swagger 또는 Postman API 문서 추가
+🔜 JWT 기반 로그인 → userId 기반으로 포트폴리오 관리
+🔜 프론트엔드 개발 연동
+---
+
+## 📌 11. 기타
 - **문의 email:** `wolgus104@naver.com`
 - **문의 phone:** `01023392750`
 - **API 문서:** Postman 링크 추가 예정
