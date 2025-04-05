@@ -11,6 +11,7 @@ Twelve Data API를 활용하여 **실시간 주가 데이터 조회 및 포트�
 - **백엔드**: Express.js + TypeScript
 - **데이터베이스**: MariaDB + Sequelize
 - **API 제공**: Twelve Data API 사용
+- **로깅**: Pino 로그 시스템 사용
 
 ---
 
@@ -18,7 +19,7 @@ Twelve Data API를 활용하여 **실시간 주가 데이터 조회 및 포트�
 
 ### 1️⃣ 프로젝트 클론 및 환경 설정
 ```bash
-git clone https://github.com/wolgus104@naver.com/stock-server.git
+git clone https://github.com/jeong-jaehyeon/stock-server.git
 cd stock-server
 yarn install
 ```
@@ -49,7 +50,7 @@ yarn dev
 
 ## 📌 3. API 사용법
 
-### **1️⃣ 주식 검색 (실시간 시세 조회)**
+### **1️⃣ 주식 검색[README_updated.md](../../../Downloads/README_updated.md) (실시간 시세 조회)**
 📌 특정 주식의 실시간 데이터를 조회합니다.
 ```http
 GET /api/stocks?symbol=AAPL
@@ -171,35 +172,31 @@ DELETE /api/portfolio/AAPL
 ---
 
 ## 📌 4. 현재까지 진행한 작업
-✅ Express + TypeScript + Sequelize 초기 설정 완료  
-✅ MariaDB 연결 및 `stock_db` 생성  
-✅ Twelve Data API 연동하여 주식 데이터 조회 구현  
-✅ 포트폴리오 데이터베이스 테이블 생성 (`portfolio`)  
-✅ 포트폴리오 추가 (`POST /api/portfolio`) 기능 구현  
-✅ 포트폴리오 삭제 (`DELETE /api/portfolio/:symbol`) API 구현  
-✅ 포트폴리오 조회 (`GET /api/portfolio`) API 구현  
-✅ 매도 기능 (`POST /api/portfolio/sell/:symbol`) 구현 완료  
-✅ `trade_history` 테이블 추가 및 **매수/매도 내역 기록 기능 반영**  
-✅ `profitLoss`(수익/손실) 계산 기능 추가
-
+✅ Express + TypeScript + Sequelize 초기 설정
+✅ MariaDB 연결 및 stock_db 생성
+✅ Twelve Data API 연동하여 주식 데이터 조회 구현
+✅ `Portfolio`, `TradeHistory` 테이블 생성 및 관계 설정 완료
+✅ 포트폴리오 CRUD 기능 구현
+✅ 매수/매도 내역 기록 및 수익률 계산 추가
+✅ 오류 핸들링 개선 (http-errors, express-async-errors 적용)
+✅ Pino 로깅 도입 및 API 요청/응답 전반 로그 기록 기능 구현
+✅ Sequelize 초기화 로직 유틸 파일(@config/db)로 분리
+✅ HTTP 상태 코드 유틸(@utils/statusCodes) 적용
 ---
 
 ## 📌 5. 앞으로 할 작업
-🔜 포트폴리오 추가 시, **중복 주식 처리 및 평균 매수가 계산**  
-🔜 포트폴리오 조회 시, **현재 주가 및 손익률 계산 추가**  
-🔜 포트폴리오 수정 기능 추가 (매수 단가 변경 가능하게)  
-🔜 프론트엔드 개발 시작 (추후 진행)  
-🔜 Postman 링크 추가 예정
-
+🔜 포트폴리오 수정 기능 (단가 조정 등)
+🔜 거래 내역 리스트 API
+🔜 Swagger 또는 Postman API 문서 추가
+🔜 프론트엔드 개발 연동
 ---
 
 ## 📌 6. API 테스트 (Postman)
 Postman으로 API를 테스트할 수 있습니다.  
 📌 **Postman 링크 추가 예정**
-
 ---
 
-## 📌 7. 에러 핸들링 개선 (2024-04-04)
+## 📌 7. 에러 핸들링 개선 (2025-03-11)
 
 - ✅ `express-async-errors` 적용  
   - 비동기 함수에서 발생하는 에러가 자동으로 `Express`의 에러 핸들러로 전달됨.  
@@ -249,6 +246,18 @@ TradeHistory.belongsTo(Portfolio, { foreignKey: 'portfolioId' })
 
 ---
 
-## 📌 9. 기타
-- **문의:** `wolgus104@naver.com`
+## 📌 9. 로깅시스템
+- ✅ pino 기반으로 빠르고 효율적인 로그 기록
+- ✅ @utils/logger.ts 파일에서 기본 로거 정의
+- ✅ API 요청 및 응답 로그는 requestLogger 미들웨어에서 처리
+
+📌 **응답 예시**
+```
+[2025-04-04 13:54:46.893] INFO: 📥 요청 시작: POST /api/portfolio
+[2025-04-04 13:54:46.910] INFO: ✅ 응답 완료: POST /api/portfolio 201 - 17.3ms
+```
+
+## 📌 10. 기타
+- **문의 email:** `wolgus104@naver.com`
+- **문의 phone:** `01023392750`
 - **API 문서:** Postman 링크 추가 예정
