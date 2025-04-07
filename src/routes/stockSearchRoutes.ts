@@ -2,7 +2,7 @@ import { Router } from "express"
 import {
   getStockBySymbolController,
   getMultipleStocksController,
-} from "../controllers/stockSearchController"
+} from "@controllers/stockSearchController"
 
 const router = Router()
 

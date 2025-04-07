@@ -209,7 +209,7 @@ Postman으로 전체 API를 손쉽게 테스트할 수 있습니다.
     import createError from "http-errors"
 
     if (!symbol) {
-      throw createError(400, "symbol은 필수 입력값입니다.")
+      throw createError(StatusCodes.BAD_REQUEST, "symbol은 필수 입력값입니다.")
     }
     ```
 
@@ -217,7 +217,7 @@ Postman으로 전체 API를 손쉽게 테스트할 수 있습니다.
     ```ts
     app.use((err: HttpError, req: Request, res: Response, _next: NextFunction) => {
       console.error(err.stack)
-      res.status(err.status || 500).json({
+      res.status(err.status || StatusCodes.INTERNAL_SERVER_ERROR).json({
         message: err.message || "서버 내부 오류가 발생했습니다.",
       })
     })

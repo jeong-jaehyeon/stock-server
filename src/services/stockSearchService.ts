@@ -1,6 +1,7 @@
 import axios from "axios"
 import createError from "http-errors"
 import { TWELVE_DATA_CONFIG } from "../config/apiConfig"
+import { StatusCodes } from "@utils/statusCodes"
 
 const API_KEY = process.env.TWELVE_DATA_API_KEY // 환경 변수에서 API 키 가져오기
 
@@ -139,7 +140,10 @@ export const getStockPriceFromAPI = async (symbol: string): Promise<number> => {
 
   // ✅ 주식 데이터가 없을 경우 에러 발생
   if (!response.data || !response.data.price) {
-    throw createError(404, `주식 데이터가 존재하지 않습니다: ${symbol}`)
+    throw createError(
+      StatusCodes.NOT_FOUND,
+      `주식 데이터가 존재하지 않습니다: ${symbol}`,
+    )
   }
 
   // ✅ price를 숫자형으로 반환
