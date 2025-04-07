@@ -8,8 +8,10 @@ dotenv.config()
 import logger from "@utils/logger"
 import { initDatabase } from "@config/db"
 import { StatusCodes } from "@utils/statusCodes"
-import stockRoutes from "./routes/stockSearchRoutes"
-import portfolioRoutes from "./routes/portfolioRoutes"
+import stockRoutes from "@routes/stockSearchRoutes"
+import portfolioRoutes from "@routes/portfolioRoutes"
+import authRoutes from "@routes/authRoutes"
+
 import "./models"
 import { requestLogger } from "@middleware/requestLogger" // DB 모델 등록
 
@@ -28,6 +30,7 @@ export const createServer = async () => {
   // 라우트
   app.use("/api/stocks", stockRoutes)
   app.use("/api/portfolio", portfolioRoutes)
+  app.use("/api/auth", authRoutes)
 
   // 기본 라우트
   app.get("/", (req, res) => {
