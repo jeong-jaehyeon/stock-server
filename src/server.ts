@@ -11,6 +11,7 @@ import { StatusCodes } from "@utils/statusCodes"
 import stockRoutes from "@routes/stockSearchRoutes"
 import portfolioRoutes from "@routes/portfolioRoutes"
 import authRoutes from "@routes/authRoutes"
+import userRoutes from "@routes/userRoutes"
 
 import "./models"
 import { requestLogger } from "@middleware/requestLogger" // DB 모델 등록
@@ -31,6 +32,7 @@ export const createServer = async () => {
   app.use("/api/stocks", stockRoutes)
   app.use("/api/portfolio", portfolioRoutes)
   app.use("/api/auth", authRoutes)
+  app.use("/api/users", userRoutes)
 
   // 기본 라우트
   app.get("/", (req, res) => {

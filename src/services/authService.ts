@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt"
 import User from "@models/User"
 
-export const registerUser = async (email: string, password: string) => {
+export const registerUserService = async (email: string, password: string) => {
   const existingUser = await User.findOne({ where: { email } })
   if (existingUser) {
     throw new Error("이미 사용 중인 이메일입니다.")

@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import createError from "http-errors"
-import { registerUser } from "@services/authService"
+import { registerUserService } from "@services/authService"
 import { sendSuccessResponse } from "@utils/sendSuccessResponse"
 import { StatusCodes } from "@utils/statusCodes"
 
@@ -17,7 +17,7 @@ export const registerUser = async (
     )
   }
 
-  const newUser = await registerUser(email, password)
+  const newUser = await registerUserService(email, password)
 
   sendSuccessResponse(res, "회원가입 완료", newUser, StatusCodes.CREATED)
 }
