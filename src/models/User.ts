@@ -1,15 +1,28 @@
 // src/models/User.ts
-import { DataTypes, Model } from "sequelize"
-import sequelize from "@config/db"
 
-class User extends Model {
-  public id!: number
-  public email!: string
-  public password!: string
-  public readonly createdAt!: Date
-  public readonly updatedAt!: Date
+import { DataTypes, Model, Optional } from "sequelize"
+import sequelize from "../config/db"
+
+// 1. 타입 정의
+interface UserAttributes {
+  id: number
+  email: string
+  password: string
 }
 
+type UserCreationAttributes = Optional<UserAttributes, "id">
+
+// 2. User 모델 정의
+class User
+  extends Model<UserAttributes, UserCreationAttributes>
+  implements UserAttributes
+{
+  declare id: number
+  declare email: string
+  declare password: string
+}
+
+// 3. init
 User.init(
   {
     id: {
@@ -21,9 +34,6 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-      validate: {
-        isEmail: true,
-      },
     },
     password: {
       type: DataTypes.STRING,
@@ -34,7 +44,7 @@ User.init(
     sequelize,
     modelName: "User",
     tableName: "users",
-    timestamps: true,
+    timestamps: true, // createdAt, updatedAt 자동 생성
   },
 )
 
