@@ -5,8 +5,12 @@ import {
   sellStockFromPortfolio,
   getPortfolioSummary,
 } from "@controllers/portfolioController"
+import { authenticateUser } from "@middleware/authMiddleware"
 
 const router = Router()
+
+// 인증이 필요한 API만 이 미들웨어를 적용
+router.use(authenticateUser)
 
 // ✅ 포트폴리오에 주식 매수
 router.post("/", addStockToPortfolio)

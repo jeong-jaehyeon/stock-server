@@ -3,7 +3,8 @@
     "target": "ES2022",
     "module": "CommonJS",
     "moduleResolution": "node",
-    "baseUrl": "./src", // src 기준으로 절대경로 지정
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "baseUrl": "./src",
     "paths": {
       "@utils/*": ["utils/*"],
       "@routes/*": ["routes/*"],
@@ -11,7 +12,7 @@
       "@services/*": ["services/*"],
       "@models/*": ["models/*"],
       "@config/*": ["config/*"],
-      "@middleware/*": ["middleware/*"],
+      "@middleware/*": ["middleware/*"]
     },
     "esModuleInterop": true,
     "resolveJsonModule": true,
