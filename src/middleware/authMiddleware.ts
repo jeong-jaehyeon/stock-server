@@ -10,13 +10,18 @@ import { StatusCodes } from "@utils/statusCodes"
 import logger from "@utils/logger"
 import { UserPayload } from "../types/custom"
 
+interface AuthenticatedRequest extends Request {
+  user?: UserPayload
+}
+
 export const authenticateUser = (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction,
 ) => {
   const authHeader = req.headers.authorization
 
+  console.log(authHeader, ":authHeader")
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     throw createError(StatusCodes.UNAUTHORIZED, "인증 토큰이 없습니다.")
   }
@@ -26,6 +31,7 @@ export const authenticateUser = (
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as UserPayload
     req.user = decoded
+    next()
   } catch (err) {
     logger.warn("인증 실패: 유효하지 않은 토큰", err)
     throw createError(StatusCodes.UNAUTHORIZED, "유효하지 않은 토큰입니다.")
