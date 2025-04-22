@@ -8,10 +8,15 @@ import {
 import createError from "http-errors"
 import { StatusCodes } from "@utils/statusCodes"
 import { sendSuccessResponse } from "@utils/sendSuccessResponse"
+import { UserPayload } from "types/custom"
+
+interface AuthenticatedRequest extends Request {
+  user?: UserPayload
+}
 
 // ✅ 주식 매수 컨트롤러
 export const addStockToPortfolio = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
 ): Promise<void> => {
   const { symbol, name, buyPrice, quantity } = req.body
@@ -28,7 +33,14 @@ export const addStockToPortfolio = async (
     throw createError(StatusCodes.BAD_REQUEST, "매수 단가는 0보다 커야 합니다.")
   }
 
+  const userId = req.user?.id
+
+  if (!userId) {
+    throw createError(StatusCodes.UNAUTHORIZED, "로그인이 필요합니다.")
+  }
+
   const addedStock = await addStockToPortfolioService(
+    userId,
     symbol,
     name,
     buyPrice,

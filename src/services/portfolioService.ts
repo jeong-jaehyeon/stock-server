@@ -5,6 +5,7 @@ import logger from "@utils/logger" // pino 로거 import
 
 // 포트폴리오에 주식 매수 (기존 주식이면 평균 매수 단가 업데이트)
 export const addStockToPortfolioService = async (
+  userId: number,
   symbol: string,
   name: string,
   buyPrice: number,
@@ -33,6 +34,7 @@ export const addStockToPortfolioService = async (
     } else {
       // ✅ 3. 존재하지 않으면 새로 추가
       existingStock = await Portfolio.create({
+        userId,
         symbol,
         name,
         buyPrice,

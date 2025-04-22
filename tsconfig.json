@@ -12,7 +12,8 @@
       "@services/*": ["services/*"],
       "@models/*": ["models/*"],
       "@config/*": ["config/*"],
-      "@middleware/*": ["middleware/*"]
+      "@middleware/*": ["middleware/*"],
+      "types/*": ["types/*"]
     },
     "esModuleInterop": true,
     "resolveJsonModule": true,

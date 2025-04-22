@@ -8,7 +8,7 @@ import jwt from "jsonwebtoken"
 import createError from "http-errors"
 import { StatusCodes } from "@utils/statusCodes"
 import logger from "@utils/logger"
-import { UserPayload } from "../types/custom"
+import { UserPayload } from "types/custom"
 
 interface AuthenticatedRequest extends Request {
   user?: UserPayload
