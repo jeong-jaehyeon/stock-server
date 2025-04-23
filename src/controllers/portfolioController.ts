@@ -4,6 +4,7 @@ import {
   deleteStockFromPortfolioService,
   sellStockFromPortfolioService,
   getPortfolioSummaryService,
+  getUserPortfolioService,
 } from "@services/portfolioService"
 import createError from "http-errors"
 import { StatusCodes } from "@utils/statusCodes"
@@ -12,6 +13,25 @@ import { UserPayload } from "types/custom"
 
 interface AuthenticatedRequest extends Request {
   user?: UserPayload
+}
+
+export const getUserPortfolio = async (
+  req: AuthenticatedRequest,
+  res: Response,
+): Promise<void> => {
+  const userId = req.user?.id
+  if (!userId) {
+    throw createError(StatusCodes.UNAUTHORIZED, "인증된 사용자가 아닙니다.")
+  }
+
+  const portfolio = await getUserPortfolioService(userId)
+
+  sendSuccessResponse(
+    res,
+    `사용자의 포트폴리오를 조회하였습니다.`, // 이메일 혹은 이름 가져와서 넣어도 괜찮을 듯
+    portfolio,
+    StatusCodes.OK,
+  )
 }
 
 // ✅ 주식 매수 컨트롤러

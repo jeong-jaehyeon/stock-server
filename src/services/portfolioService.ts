@@ -1,7 +1,11 @@
 import Portfolio from "../models/Portfolio"
 import TradeHistory from "../models/TradeHistory"
 import { getStockPriceFromAPI } from "./stockSearchService"
-import logger from "@utils/logger" // pino 로거 import
+import logger from "@utils/logger"
+
+export const getUserPortfolioService = async (userId: number) => {
+  return await Portfolio.findAll({ where: { userId } })
+}
 
 // 포트폴리오에 주식 매수 (기존 주식이면 평균 매수 단가 업데이트)
 export const addStockToPortfolioService = async (
