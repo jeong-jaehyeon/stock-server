@@ -1,5 +1,5 @@
-import Portfolio from "../models/Portfolio"
-import TradeHistory from "../models/TradeHistory"
+import { Portfolio } from "@models/Portfolio"
+import { TradeHistory } from "@models/TradeHistory"
 import { getStockPriceFromAPI } from "./stockSearchService"
 import logger from "@utils/logger"
 

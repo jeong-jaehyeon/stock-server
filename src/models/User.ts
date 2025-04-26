@@ -1,51 +1,117 @@
-// src/models/User.ts
-
+import * as Sequelize from "sequelize"
 import { DataTypes, Model, Optional } from "sequelize"
-import sequelize from "../config/db"
+import type { Portfolio, PortfolioId } from "./Portfolio"
 
-// 1. 타입 정의
-interface UserAttributes {
+export interface UserAttributes {
   id: number
   email: string
   password: string
+  createdAt: Date
+  updatedAt: Date
 }
 
-type UserCreationAttributes = Optional<UserAttributes, "id">
+export type UserPk = "id"
+export type UserId = User[UserPk]
+export type UserOptionalAttributes = "id" | "createdAt" | "updatedAt"
+export type UserCreationAttributes = Optional<
+  UserAttributes,
+  UserOptionalAttributes
+>
 
-// 2. User 모델 정의
-class User
+export class User
   extends Model<UserAttributes, UserCreationAttributes>
   implements UserAttributes
 {
-  declare id: number
-  declare email: string
-  declare password: string
+  id!: number
+  email!: string
+  password!: string
+  createdAt!: Date
+  updatedAt!: Date
+
+  // User hasMany Portfolio via userId
+  portfolios!: Portfolio[]
+  getPortfolios!: Sequelize.HasManyGetAssociationsMixin<Portfolio>
+  setPortfolios!: Sequelize.HasManySetAssociationsMixin<Portfolio, PortfolioId>
+  addPortfolio!: Sequelize.HasManyAddAssociationMixin<Portfolio, PortfolioId>
+  addPortfolios!: Sequelize.HasManyAddAssociationsMixin<Portfolio, PortfolioId>
+  createPortfolio!: Sequelize.HasManyCreateAssociationMixin<Portfolio>
+  removePortfolio!: Sequelize.HasManyRemoveAssociationMixin<
+    Portfolio,
+    PortfolioId
+  >
+  removePortfolios!: Sequelize.HasManyRemoveAssociationsMixin<
+    Portfolio,
+    PortfolioId
+  >
+  hasPortfolio!: Sequelize.HasManyHasAssociationMixin<Portfolio, PortfolioId>
+  hasPortfolios!: Sequelize.HasManyHasAssociationsMixin<Portfolio, PortfolioId>
+  countPortfolios!: Sequelize.HasManyCountAssociationsMixin
+
+  static initModel(sequelize: Sequelize.Sequelize): typeof User {
+    return User.init(
+      {
+        id: {
+          autoIncrement: true,
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          primaryKey: true,
+        },
+        email: {
+          type: DataTypes.STRING(255),
+          allowNull: false,
+          unique: "email_4",
+        },
+        password: {
+          type: DataTypes.STRING(255),
+          allowNull: false,
+        },
+
+        createdAt: {
+          type: DataTypes.DATE,
+          allowNull: false,
+        },
+        updatedAt: {
+          type: DataTypes.DATE,
+          allowNull: false,
+        },
+      },
+      {
+        sequelize,
+        tableName: "users",
+        timestamps: true,
+        indexes: [
+          {
+            name: "PRIMARY",
+            unique: true,
+            using: "BTREE",
+            fields: [{ name: "id" }],
+          },
+          {
+            name: "email",
+            unique: true,
+            using: "BTREE",
+            fields: [{ name: "email" }],
+          },
+          {
+            name: "email_2",
+            unique: true,
+            using: "BTREE",
+            fields: [{ name: "email" }],
+          },
+          {
+            name: "email_3",
+            unique: true,
+            using: "BTREE",
+            fields: [{ name: "email" }],
+          },
+          {
+            name: "email_4",
+            unique: true,
+            using: "BTREE",
+            fields: [{ name: "email" }],
+          },
+        ],
+      },
+    )
+  }
 }
-
-// 3. init
-User.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  },
-  {
-    sequelize,
-    modelName: "User",
-    tableName: "users",
-    timestamps: true, // createdAt, updatedAt 자동 생성
-  },
-)
-
-export default User
