@@ -1,5 +1,5 @@
 import { SequelizeAuto } from "sequelize-auto"
-import config from "@config/.sequelizerc"
+import config from "../config/.sequelizerc"
 
 const auto = new SequelizeAuto(
   config.database!,
@@ -11,10 +11,10 @@ const auto = new SequelizeAuto(
     directory: config.directory,
     lang: config.lang as never,
     additional: config.additional,
-    caseModel: "p", // PascalCase 모델 이름
-    caseFile: "c", // camelCase 파일 이름
+    caseModel: "p", // 모델 이름 PascalCase
+    caseFile: "p", // 파일 이름도 PascalCase로
     singularize: true,
-    useDefine: false, // init
+    useDefine: false,
   },
 )
 
