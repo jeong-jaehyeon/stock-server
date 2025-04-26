@@ -45,6 +45,6 @@
     "start": "node dist/app.js",
     "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/app.ts",
     "format": "prettier --write .",
-    "seq": "ts-node src/scripts/generate-models.ts && ts-node src/scripts/fix-models-full.ts && prettier --write src/models"
+    "seq": "ts-node src/scripts/generate-models.ts && ts-node src/scripts/fix-models-full.ts && ts-node src/scripts/fix-models-declare.ts && prettier --write src/models"
   }
 }

@@ -26,17 +26,17 @@ export class Portfolio
   extends Model<PortfolioAttributes, PortfolioCreationAttributes>
   implements PortfolioAttributes
 {
-  id!: number
-  symbol!: string
-  name!: string
-  buyPrice!: number
-  quantity!: number
-  userId!: number
-  createdAt!: Date
-  updatedAt!: Date
+  declare id: number
+  declare symbol: string
+  declare name: string
+  declare buyPrice: number
+  declare quantity: number
+  declare userId: number
+  declare createdAt: Date
+  declare updatedAt: Date
 
   // Portfolio hasMany TradeHistory via portfolioId
-  trade_histories!: TradeHistory[]
+  declare trade_histories: TradeHistory[]
   getTrade_histories!: Sequelize.HasManyGetAssociationsMixin<TradeHistory>
   setTrade_histories!: Sequelize.HasManySetAssociationsMixin<
     TradeHistory,
@@ -69,7 +69,7 @@ export class Portfolio
   >
   countTrade_histories!: Sequelize.HasManyCountAssociationsMixin
   // Portfolio belongsTo User via userId
-  user!: User
+  declare user: User
   getUser!: Sequelize.BelongsToGetAssociationMixin<User>
   setUser!: Sequelize.BelongsToSetAssociationMixin<User, UserId>
   createUser!: Sequelize.BelongsToCreateAssociationMixin<User>

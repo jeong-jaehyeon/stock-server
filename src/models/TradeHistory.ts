@@ -31,19 +31,19 @@ export class TradeHistory
   extends Model<TradeHistoryAttributes, TradeHistoryCreationAttributes>
   implements TradeHistoryAttributes
 {
-  id!: number
-  portfolioId!: number
-  symbol!: string
-  name!: string
+  declare id: number
+  declare portfolioId: number
+  declare symbol: string
+  declare name: string
   tradeType!: "BUY" | "SELL"
-  tradePrice!: number
-  quantity!: number
+  declare tradePrice: number
+  declare quantity: number
   profitLoss?: number
-  createdAt!: Date
-  updatedAt!: Date
+  declare createdAt: Date
+  declare updatedAt: Date
 
   // TradeHistory belongsTo Portfolio via portfolioId
-  portfolio!: Portfolio
+  declare portfolio: Portfolio
   getPortfolio!: Sequelize.BelongsToGetAssociationMixin<Portfolio>
   setPortfolio!: Sequelize.BelongsToSetAssociationMixin<Portfolio, PortfolioId>
   createPortfolio!: Sequelize.BelongsToCreateAssociationMixin<Portfolio>

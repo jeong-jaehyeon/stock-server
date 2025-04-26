@@ -22,14 +22,14 @@ export class User
   extends Model<UserAttributes, UserCreationAttributes>
   implements UserAttributes
 {
-  id!: number
-  email!: string
-  password!: string
-  createdAt!: Date
-  updatedAt!: Date
+  declare id: number
+  declare email: string
+  declare password: string
+  declare createdAt: Date
+  declare updatedAt: Date
 
   // User hasMany Portfolio via userId
-  portfolios!: Portfolio[]
+  declare portfolios: Portfolio[]
   getPortfolios!: Sequelize.HasManyGetAssociationsMixin<Portfolio>
   setPortfolios!: Sequelize.HasManySetAssociationsMixin<Portfolio, PortfolioId>
   addPortfolio!: Sequelize.HasManyAddAssociationMixin<Portfolio, PortfolioId>
