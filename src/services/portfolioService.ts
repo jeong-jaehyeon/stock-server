@@ -21,7 +21,7 @@ export const addStockToPortfolioService = async (
     )
     // 기존에 있는 주식인지 확인
     // 이미 보유 중인 주식인지 확인
-    let existingStock = await Portfolio.findOne({ where: { symbol } })
+    let existingStock = await Portfolio.findOne({ where: { userId, symbol } })
 
     if (existingStock) {
       // 이미 보유 중인 주식이면 개수와 평균 매수 단가 업데이트
@@ -68,6 +68,7 @@ export const addStockToPortfolioService = async (
 
 // ✅ 포트폴리오에서 주식 매도 (일부 또는 전체)
 export const sellStockFromPortfolioService = async (
+  userId: number,
   symbol: string,
   sellPrice: number,
   quantity: number,
@@ -78,7 +79,7 @@ export const sellStockFromPortfolioService = async (
     )
 
     // 1️⃣ 포트폴리오에서 해당 주식 조회
-    const existingStock = await Portfolio.findOne({ where: { symbol } })
+    const existingStock = await Portfolio.findOne({ where: { userId, symbol } })
     if (!existingStock) {
       throw new Error(`${symbol} 주식이 포트폴리오에 없습니다.`)
     }
@@ -126,8 +127,11 @@ export const sellStockFromPortfolioService = async (
   }
 }
 
-export const deleteStockFromPortfolioService = async (symbol: string) => {
-  const existingStock = await Portfolio.findOne({ where: { symbol } })
+export const deleteStockFromPortfolioService = async (
+  userId: number,
+  symbol: string,
+) => {
+  const existingStock = await Portfolio.findOne({ where: { userId, symbol } })
 
   if (!existingStock) {
     return {
@@ -150,9 +154,9 @@ export const deleteStockFromPortfolioService = async (symbol: string) => {
  * ✅ 포트폴리오 요약 서비스
  * - 사용자의 포트폴리오에 있는 모든 주식의 현재 가치와 손익을 계산하여 반환
  */
-export const getPortfolioSummaryService = async () => {
+export const getPortfolioSummaryService = async (userId: number) => {
   // 포트폴리오에 등록된 모든 주식 가져오기
-  const portfolios = await Portfolio.findAll()
+  const portfolios = await Portfolio.findAll({ where: { userId } })
 
   // 각 주식의 현재가와 손익을 계산하여 반환
   return await Promise.all(

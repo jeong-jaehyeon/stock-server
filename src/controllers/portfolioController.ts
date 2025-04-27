@@ -77,7 +77,7 @@ export const addStockToPortfolio = async (
 
 // ✅ 주식 매도 컨트롤러
 export const sellStockFromPortfolio = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
 ): Promise<void> => {
   const { symbol } = req.params
@@ -98,7 +98,14 @@ export const sellStockFromPortfolio = async (
     throw createError(StatusCodes.BAD_REQUEST, "매도 단가는 0보다 커야 합니다.")
   }
 
+  const userId = req.user?.id
+
+  if (!userId) {
+    throw createError(StatusCodes.UNAUTHORIZED, "로그인이 필요합니다.")
+  }
+
   const soldStock = await sellStockFromPortfolioService(
+    userId,
     symbol,
     Number(sellPrice),
     Number(quantity),
@@ -114,12 +121,17 @@ export const sellStockFromPortfolio = async (
 
 // ✅ 주식 삭제 컨트롤러
 export const deleteStockFromPortfolio = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
 ): Promise<void> => {
   const { symbol } = req.params
+  const userId = req.user?.id
 
-  const result = await deleteStockFromPortfolioService(symbol)
+  if (!userId) {
+    throw createError(StatusCodes.UNAUTHORIZED, "로그인이 필요합니다.")
+  }
+
+  const result = await deleteStockFromPortfolioService(userId, symbol)
 
   if (result.message.includes("존재하지 않습니다")) {
     throw createError(
@@ -133,9 +145,16 @@ export const deleteStockFromPortfolio = async (
 
 // ✅ 포트폴리오 요약 조회 컨트롤러
 export const getPortfolioSummary = async (
-  _req: Request,
+  req: AuthenticatedRequest,
   res: Response,
 ): Promise<void> => {
-  const summary = await getPortfolioSummaryService()
+  const userId = req.user?.id
+
+  if (!userId) {
+    throw createError(StatusCodes.UNAUTHORIZED, "로그인이 필요합니다.")
+  }
+
+  const summary = await getPortfolioSummaryService(userId)
+
   sendSuccessResponse(res, "포트폴리오 요약 조회 성공", summary)
 }

@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt"
-import User from "@models/User"
+import { User } from "@models/User"
 import jwt from "jsonwebtoken"
 
 export const registerUserService = async (email: string, password: string) => {
