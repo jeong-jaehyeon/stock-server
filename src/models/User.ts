@@ -59,7 +59,7 @@ export class User
         email: {
           type: DataTypes.STRING(255),
           allowNull: false,
-          unique: "email_4",
+          unique: true,
         },
         password: {
           type: DataTypes.STRING(255),
@@ -88,24 +88,6 @@ export class User
           },
           {
             name: "email",
-            unique: true,
-            using: "BTREE",
-            fields: [{ name: "email" }],
-          },
-          {
-            name: "email_2",
-            unique: true,
-            using: "BTREE",
-            fields: [{ name: "email" }],
-          },
-          {
-            name: "email_3",
-            unique: true,
-            using: "BTREE",
-            fields: [{ name: "email" }],
-          },
-          {
-            name: "email_4",
             unique: true,
             using: "BTREE",
             fields: [{ name: "email" }],
