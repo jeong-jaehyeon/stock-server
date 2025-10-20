@@ -74,7 +74,7 @@ export const sellStockFromPortfolioService = async (
   quantity: number,
 ) => {
   try {
-    console.log(
+    logger.info(
       `[sellStockFromPortfolioService] 실행 - symbol: ${symbol}, quantity: ${quantity}`,
     )
 
@@ -122,7 +122,7 @@ export const sellStockFromPortfolioService = async (
       profitLoss,
     }
   } catch (error) {
-    console.error("Error selling stock:", error)
+    logger.error("Error selling stock:", error)
     throw new Error("포트폴리오에서 주식을 매도하는 중 오류 발생")
   }
 }
