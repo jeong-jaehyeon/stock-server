@@ -188,7 +188,86 @@ DELETE /api/portfolio/AAPL
 
 ---
 
-## 📌 5. API 테스트 (Postman)
+### **6️⃣ 거래 내역 조회**
+📌 사용자의 전체 거래 내역을 조회합니다.
+```http
+GET /api/trade-history
+```
+📌 **응답 예시**
+```json
+[
+  {
+    "id": 1,
+    "portfolioId": 5,
+    "symbol": "AAPL",
+    "name": "Apple Inc.",
+    "tradeType": "BUY",
+    "tradePrice": 150.5,
+    "quantity": 10,
+    "profitLoss": null,
+    "createdAt": "2025-01-15T10:30:00Z"
+  },
+  {
+    "id": 2,
+    "portfolioId": 5,
+    "symbol": "AAPL",
+    "name": "Apple Inc.",
+    "tradeType": "SELL",
+    "tradePrice": 160.0,
+    "quantity": 5,
+    "profitLoss": 47.5,
+    "createdAt": "2025-01-20T14:20:00Z"
+  }
+]
+```
+
+✅ **기능 설명**
+- 인증된 사용자의 **모든 매수/매도 거래 내역 조회**
+- 최신 거래 내역부터 정렬되어 반환됨
+- 거래 유형(`BUY`/`SELL`), 거래가, 수량, 손익 정보 포함
+
+---
+
+### **7️⃣ 특정 종목 거래 내역 조회**
+📌 특정 종목에 대한 거래 내역만 조회합니다.
+```http
+GET /api/trade-history/AAPL
+```
+📌 **응답 예시**
+```json
+[
+  {
+    "id": 1,
+    "symbol": "AAPL",
+    "name": "Apple Inc.",
+    "tradeType": "BUY",
+    "tradePrice": 150.5,
+    "quantity": 10,
+    "profitLoss": null,
+    "createdAt": "2025-01-15T10:30:00Z"
+  }
+]
+```
+
+✅ **기능 설명**
+- **특정 종목의 거래 내역만 필터링하여 조회**
+- 해당 종목의 매수/매도 패턴 분석에 유용
+
+---
+
+## 📌 5. Swagger API 문서
+
+서버 실행 후, `http://localhost:3000/api-docs`에서 **대화형 API 문서**를 확인할 수 있습니다.
+
+✅ **제공 기능**
+- 모든 API 엔드포인트의 상세한 요청/응답 스키마
+- JWT 인증 흐름 및 Bearer 토큰 테스트
+- Try-it-out 기능으로 API 직접 테스트 가능
+- 에러 응답 명세 포함
+
+---
+
+## 📌 6. API 테스트 (Postman)
 Postman으로 전체 API를 손쉽게 테스트할 수 있습니다.  
 아래 링크를 통해 API 요청 목록과 예제들을 확인하고 직접 실행해보세요.
 
@@ -196,7 +275,7 @@ Postman으로 전체 API를 손쉽게 테스트할 수 있습니다.
 
 ---
 
-## 📌 6. 에러 핸들링 개선 (2025-03-11)
+## 📌 7. 에러 핸들링 개선 (2025-03-11)
 
 - ✅ `express-async-errors` 적용
   - 비동기 함수에서 발생하는 에러가 자동으로 `Express`의 에러 핸들러로 전달됨.
@@ -225,7 +304,7 @@ Postman으로 전체 API를 손쉽게 테스트할 수 있습니다.
 
 ---
 
-## 📌 7. 데이터베이스 구조
+## 📌 8. 데이터베이스 구조
 
 ### ✅ 테이블 1: `portfolios`
 - 사용자의 **현재 보유 주식 정보**를 저장하는 테이블입니다.
@@ -246,7 +325,7 @@ TradeHistory.belongsTo(Portfolio, { foreignKey: 'portfolioId' })
 
 ---
 
-## 📌 8. 로깅시스템
+## 📌 9. 로깅시스템
 - ✅ pino 기반으로 빠르고 효율적인 로그 기록
 - ✅ @utils/logger.ts 파일에서 기본 로거 정의
 - ✅ API 요청 및 응답 로그는 requestLogger 미들웨어에서 처리
@@ -257,7 +336,7 @@ TradeHistory.belongsTo(Portfolio, { foreignKey: 'portfolioId' })
 [2025-04-04 13:54:46.910] INFO: ✅ 응답 완료: POST /api/portfolio 201 - 17.3ms
 ```
 
-## 📌 9. 현재까지 진행한 작업
+## 📌 10. 현재까지 진행한 작업
 ✅ Express + TypeScript + Sequelize 초기 설정
 ✅ MariaDB 연결 및 stock_db 생성
 ✅ Twelve Data API 연동하여 주식 데이터 조회 구현
@@ -268,17 +347,23 @@ TradeHistory.belongsTo(Portfolio, { foreignKey: 'portfolioId' })
 ✅ Pino 로깅 도입 및 API 요청/응답 전반 로그 기록 기능 구현
 ✅ Sequelize 초기화 로직 유틸 파일(@config/db)로 분리
 ✅ HTTP 상태 코드 유틸(@utils/statusCodes) 적용
+✅ JWT 기반 인증 시스템 구현 (회원가입/로그인)
+✅ Swagger/OpenAPI 문서화 적용 (/api-docs)
+✅ 거래 내역 조회 API 구현 (전체/종목별)
+✅ 사용자별 포트폴리오 격리 및 인증 미들웨어 적용
 ---
 
-## 📌 10. 앞으로 할 작업
+## 📌 11. 앞으로 할 작업
 🔜 포트폴리오 수정 기능 (단가 조정 등)
-🔜 거래 내역 리스트 API
-🔜 Swagger 또는 Postman API 문서 추가
-🔜 JWT 기반 로그인 → userId 기반으로 포트폴리오 관리
+🔜 테스트 코드 작성 (Jest + Supertest)
+🔜 Docker 컨테이너화 및 배포 자동화
+🔜 입력 검증 강화 (Zod 스키마)
+🔜 WebSocket 실시간 주가 업데이트
+🔜 포트폴리오 성과 분석 기능
 🔜 프론트엔드 개발 연동
 ---
 
-## 📌 11. 기타
+## 📌 12. 기타
 - **문의 email:** `wolgus104@naver.com`
 - **문의 phone:** `01023392750`
 - **API 문서:** Postman 링크 추가 예정
