@@ -5,36 +5,51 @@ import logger from "@utils/logger"
 
 dotenv.config()
 
-const sequelize = new Sequelize(
-  process.env.DB_NAME!,
-  process.env.DB_USER!,
-  process.env.DB_PASSWORD!,
-  {
-    host: process.env.DB_HOST!,
-    dialect: "mariadb",
-    dialectOptions: {
-      allowPublicKeyRetrieval: true,
-    },
-    logging: (msg) => logger.debug(msg), // ✅ pino 로깅 사용
-    pool: {
-      max: 10,
-      min: 0,
-      idle: 10000,
-    },
-  },
-)
+// 테스트 환경에서 SQLite 사용
+const isTestEnvironment = process.env.DATABASE_DIALECT === "sqlite"
+
+const sequelize = isTestEnvironment
+  ? new Sequelize({
+      dialect: "sqlite",
+      storage: process.env.DATABASE_STORAGE || ":memory:",
+      logging: false,
+    })
+  : new Sequelize(
+      process.env.DB_NAME!,
+      process.env.DB_USER!,
+      process.env.DB_PASSWORD!,
+      {
+        host: process.env.DB_HOST!,
+        dialect: "mariadb",
+        dialectOptions: {
+          allowPublicKeyRetrieval: true,
+        },
+        logging: (msg) => logger.debug(msg),
+        pool: {
+          max: 10,
+          min: 0,
+          idle: 10000,
+        },
+      },
+    )
 
 // ✅ 연결 및 모델 동기화 함수
 export const initDatabase = async () => {
   try {
     await sequelize.authenticate()
-    logger.info("✅ DB 연결 성공")
-    await sequelize.sync({ alter: true }) // 필요 시 alter → false
-    logger.info("✅ 모든 모델 동기화 완료")
+    if (!isTestEnvironment) {
+      logger.info("✅ DB 연결 성공")
+    }
+    await sequelize.sync({ force: isTestEnvironment, alter: !isTestEnvironment })
+    if (!isTestEnvironment) {
+      logger.info("✅ 모든 모델 동기화 완료")
+    }
   } catch (error) {
-    logger.error("❌ DB 연결 실패")
-    logger.error(error)
-    process.exit(1)
+    if (!isTestEnvironment) {
+      logger.error("❌ DB 연결 실패")
+      logger.error(error)
+    }
+    throw error
   }
 }
 
