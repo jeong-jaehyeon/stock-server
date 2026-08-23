@@ -1,30 +1,24 @@
-# 📈 Stock Portfolio API (주식 포트폴리오 관리 서비스)
+# 📈 Stock Portfolio API
 
-이 프로젝트는 사용자가 자신의 **주식 포트폴리오를 관리**할 수 있도록 하는 웹 서비스입니다.  
-Twelve Data API를 활용하여 **실시간 주가 데이터 조회 및 포트폴리오 관리** 기능을 제공합니다.
+Twelve Data API로 실시간 주가를 조회하고, 매수·매도 내역과 손익까지 관리하는 **주식 포트폴리오 REST API**입니다.
 
----
-
-## 📌 1. 프로젝트 개요
-
-- **프론트엔드**: 추후 구현 예정
-- **백엔드**: Express.js + TypeScript
-- **데이터베이스**: MariaDB + Sequelize
-- **API 제공**: Twelve Data API 사용
+- **백엔드**: Express.js + TypeScript + Sequelize
+- **데이터베이스**: MariaDB
+- **외부 API**: Twelve Data (실시간 시세)
+- **클라이언트**: [`stock-client`](https://github.com/jeong-jaehyeon/stock-client) (React + Vite + TailwindCSS)
 
 ---
 
-## 📌 2. 프로젝트 설치 및 실행
+## 🚀 시작하기
 
-### 1️⃣ 프로젝트 클론 및 환경 설정
 ```bash
-git clone https://github.com/wolgus104@naver.com/stock-server.git
+git clone https://github.com/jeong-jaehyeon/stock-server.git
 cd stock-server
 yarn install
 ```
 
-### 2️⃣ 환경 변수 설정 (`.env` 파일)
-`.env` 파일을 프로젝트 루트에 생성 후, 아래 내용을 추가:
+`.env` 파일을 프로젝트 루트에 생성:
+
 ```env
 PORT=3000
 DATABASE_USER=root
@@ -35,26 +29,21 @@ DATABASE_DIALECT=mariadb
 TWELVE_DATA_API_KEY=your_api_key
 ```
 
-### 3️⃣ 데이터베이스 초기화
 ```bash
-yarn db:migrate
-```
-
-### 4️⃣ 서버 실행
-```bash
-yarn dev
+yarn db:migrate   # 데이터베이스 초기화
+yarn dev          # 개발 서버 실행
 ```
 
 ---
 
-## 📌 3. API 사용법
+## 📌 API
 
-### **1️⃣ 주식 검색 (실시간 시세 조회)**
-📌 특정 주식의 실시간 데이터를 조회합니다.
+### 1️⃣ 주식 검색 (실시간 시세 조회)
+
 ```http
 GET /api/stocks?symbol=AAPL
 ```
-📌 **응답 예시**
+
 ```json
 {
   "symbol": "AAPL",
@@ -65,45 +54,25 @@ GET /api/stocks?symbol=AAPL
 }
 ```
 
----
+### 2️⃣ 포트폴리오 추가 (매수)
 
-### **2️⃣ 포트폴리오 추가 (매수)**
-📌 사용자의 포트폴리오에 주식을 추가합니다.
 ```http
 POST /api/portfolio
 ```
-📌 **요청 바디**
+
 ```json
-{
-  "symbol": "AAPL",
-  "buyPrice": 150.5,
-  "quantity": 10
-}
-```
-📌 **응답 예시**
-```json
-{
-  "id": 1,
-  "symbol": "AAPL",
-  "buyPrice": 150.5,
-  "quantity": 10,
-  "createdAt": "2024-02-10T12:00:00Z"
-}
+{ "symbol": "AAPL", "buyPrice": 150.5, "quantity": 10 }
 ```
 
-✅ **기능 설명**
-- 같은 주식을 **중복 추가하면 평균 매수 단가 조정**
-- 기존 보유 주식 수량 업데이트
-- 거래 내역(`trade_history`) 테이블에 `BUY` 기록 추가됨
+- 같은 종목을 중복 추가하면 **평균 매수 단가 자동 조정**
+- 거래 내역(`trade_history`)에 `BUY` 기록 추가
 
----
+### 3️⃣ 포트폴리오 조회
 
-### **3️⃣ 포트폴리오 조회**
-📌 사용자의 현재 포트폴리오를 조회합니다.
 ```http
 GET /api/portfolio
 ```
-📌 **응답 예시**
+
 ```json
 [
   {
@@ -117,25 +86,18 @@ GET /api/portfolio
 ]
 ```
 
-✅ **기능 설명**
-- 현재 포트폴리오의 **보유 주식 목록, 수량, 평균 매수 단가 조회**
-- 현재가(`currentPrice`)와 **수익률(`profitLoss`) 계산하여 제공**
+- 현재가 기반 **수익/손실(`profitLoss`) 계산** 제공
 
----
+### 4️⃣ 매도
 
-### **4️⃣ 포트폴리오에서 주식 매도**
-📌 포트폴리오에서 특정 주식을 매도합니다.
 ```http
 POST /api/portfolio/sell/AAPL
 ```
-📌 **요청 바디**
+
 ```json
-{
-  "sellPrice": 160,
-  "quantity": 5
-}
+{ "sellPrice": 160, "quantity": 5 }
 ```
-📌 **응답 예시**
+
 ```json
 {
   "message": "AAPL 주식을 5개 매도 완료.",
@@ -144,111 +106,46 @@ POST /api/portfolio/sell/AAPL
 }
 ```
 
-✅ **기능 설명**
-- 보유 주식의 일부만 매도할 경우, **남은 수량 업데이트**
-- **전량 매도 시 포트폴리오에서 삭제**
-- 거래 내역(`trade_history`) 테이블에 `SELL` 기록 추가됨
-- 매도 시 발생한 수익/손실(`profitLoss`) 계산됨
+- 부분 매도 시 남은 수량 업데이트, 전량 매도 시 포트폴리오에서 삭제
+- `trade_history`에 `SELL` 기록 + 실현 손익 계산
 
----
+### 5️⃣ 포트폴리오 삭제
 
-### **5️⃣ 포트폴리오에서 주식 삭제**
-📌 포트폴리오에서 특정 주식을 완전히 제거합니다.
 ```http
 DELETE /api/portfolio/AAPL
 ```
-📌 **응답 예시**
-```json
-{
-  "message": "AAPL removed from portfolio"
-}
-```
-
-✅ **기능 설명**
-- 포트폴리오에서 **해당 주식을 완전히 삭제**
-- 거래 내역(`trade_history`)에는 영향을 주지 않음
 
 ---
 
-## 📌 4. 현재까지 진행한 작업
-✅ Express + TypeScript + Sequelize 초기 설정 완료  
-✅ MariaDB 연결 및 `stock_db` 생성  
-✅ Twelve Data API 연동하여 주식 데이터 조회 구현  
-✅ 포트폴리오 데이터베이스 테이블 생성 (`portfolio`)  
-✅ 포트폴리오 추가 (`POST /api/portfolio`) 기능 구현  
-✅ 포트폴리오 삭제 (`DELETE /api/portfolio/:symbol`) API 구현  
-✅ 포트폴리오 조회 (`GET /api/portfolio`) API 구현  
-✅ 매도 기능 (`POST /api/portfolio/sell/:symbol`) 구현 완료  
-✅ `trade_history` 테이블 추가 및 **매수/매도 내역 기록 기능 반영**  
-✅ `profitLoss`(수익/손실) 계산 기능 추가
+## 🗄️ 데이터 모델
 
----
-
-## 📌 5. 앞으로 할 작업
-🔜 포트폴리오 추가 시, **중복 주식 처리 및 평균 매수가 계산**  
-🔜 포트폴리오 조회 시, **현재 주가 및 손익률 계산 추가**  
-🔜 포트폴리오 수정 기능 추가 (매수 단가 변경 가능하게)  
-🔜 프론트엔드 개발 시작 (추후 진행)  
-🔜 Postman 링크 추가 예정
-
----
-
-## 📌 6. API 테스트 (Postman)
-Postman으로 API를 테스트할 수 있습니다.  
-📌 **Postman 링크 추가 예정**
-
----
-
-## 📌 7. 에러 핸들링 개선 (2024-04-04)
-
-- ✅ `express-async-errors` 적용  
-  - 비동기 함수에서 발생하는 에러가 자동으로 `Express`의 에러 핸들러로 전달됨.  
-  - `try-catch`를 일일이 작성하지 않아도 되므로 코드가 깔끔해짐.
-
-- ✅ `http-errors` 적용  
-  - 명확하고 일관된 에러 메시지와 HTTP 상태 코드를 반환하도록 개선.  
-  - 예시:
-    ```ts
-    import createError from "http-errors"
-
-    if (!symbol) {
-      throw createError(400, "symbol은 필수 입력값입니다.")
-    }
-    ```
-
-- ✅ 개선된 글로벌 에러 핸들러 예시
-    ```ts
-    app.use((err: HttpError, req: Request, res: Response, _next: NextFunction) => {
-      console.error(err.stack)
-      res.status(err.status || 500).json({
-        message: err.message || "서버 내부 오류가 발생했습니다.",
-      })
-    })
-    ```
-
----
-
-## 📌 8. 데이터베이스 구조
-
-### ✅ 테이블 1: `portfolios`
-- 사용자의 **현재 보유 주식 정보**를 저장하는 테이블입니다.
-### ✅ 테이블 2: `trade_history`
-- 주식의 **매수/매도 내역**을 기록하는 테이블입니다.
-- `portfolioId`를 통해 `portfolios` 테이블과 **1:N 관계**로 연결됩니다.
-
-### ✅ 관계 (Associations)
-- `Portfolio`(1) ↔ `TradeHistory`(N) 관계
-- 하나의 포트폴리오에 여러 개의 거래 기록이 연결됩니다.
+| 테이블 | 역할 |
+|---|---|
+| `portfolios` | 현재 보유 주식 정보 |
+| `trade_history` | 매수/매도 내역 (`portfolios`와 1:N) |
 
 ```typescript
 Portfolio.hasMany(TradeHistory, { foreignKey: 'portfolioId', onDelete: 'CASCADE' })
 TradeHistory.belongsTo(Portfolio, { foreignKey: 'portfolioId' })
 ```
 
-- 포트폴리오 삭제 시, 관련된 거래 기록도 함께 삭제됩니다.
+포트폴리오 삭제 시 관련 거래 기록도 함께 삭제됩니다(CASCADE).
 
 ---
 
-## 📌 9. 기타
-- **문의:** `wolgus104@naver.com`
-- **API 문서:** Postman 링크 추가 예정
+## 🔧 에러 핸들링
+
+- `express-async-errors` — 비동기 라우트의 에러를 글로벌 핸들러로 자동 전달
+- `http-errors` — 일관된 HTTP 상태 코드와 메시지 반환
+
+```ts
+if (!symbol) {
+  throw createError(400, "symbol은 필수 입력값입니다.")
+}
+```
+
+---
+
+## 📫 Contact
+
+`wolgus104@naver.com`
