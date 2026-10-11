@@ -40,7 +40,10 @@ export const initDatabase = async () => {
     if (!isTestEnvironment) {
       logger.info("✅ DB 연결 성공")
     }
-    await sequelize.sync({ force: isTestEnvironment, alter: !isTestEnvironment })
+    await sequelize.sync({
+      force: isTestEnvironment,
+      alter: !isTestEnvironment,
+    })
     if (!isTestEnvironment) {
       logger.info("✅ 모든 모델 동기화 완료")
     }

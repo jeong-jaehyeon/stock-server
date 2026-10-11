@@ -20,7 +20,7 @@ export const getUserTradeHistoryService = async (userId: number) => {
 
     return trades
   } catch (error) {
-    logger.error("Error fetching trade history:", error)
+    logger.error({ err: error }, "Error fetching trade history:")
     throw new Error("거래 내역 조회 중 오류 발생")
   }
 }
@@ -49,7 +49,7 @@ export const getUserTradeHistoryBySymbolService = async (
 
     return trades
   } catch (error) {
-    logger.error("Error fetching trade history by symbol:", error)
+    logger.error({ err: error }, "Error fetching trade history by symbol:")
     throw new Error("거래 내역 조회 중 오류 발생")
   }
 }

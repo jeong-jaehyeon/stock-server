@@ -92,7 +92,10 @@ describe("Auth API Tests", () => {
       expect(response.body).toHaveProperty("message", "로그인 성공")
       expect(response.body.data).toHaveProperty("token")
       expect(response.body.data).toHaveProperty("user")
-      expect(response.body.data.user).toHaveProperty("email", "test@example.com")
+      expect(response.body.data.user).toHaveProperty(
+        "email",
+        "test@example.com",
+      )
       expect(typeof response.body.data.token).toBe("string")
     })
 

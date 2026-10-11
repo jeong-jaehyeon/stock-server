@@ -14,24 +14,25 @@ Twelve Data API로 실시간 주가를 조회하고, 매수·매도 내역과 �
 ```bash
 git clone https://github.com/jeong-jaehyeon/stock-server.git
 cd stock-server
-yarn install
+npm install
+cp .env.example .env   # 값 채우기
 ```
 
-`.env` 파일을 프로젝트 루트에 생성:
+`.env` 파일을 프로젝트 루트에 생성 (`.env.example` 참고 — 실제 키는 절대 커밋하지 마세요):
 
 ```env
 PORT=3000
-DATABASE_USER=root
-DATABASE_PASSWORD=yourpassword
-DATABASE_NAME=stock_db
-DATABASE_HOST=localhost
-DATABASE_DIALECT=mariadb
+DB_NAME=stock_db
+DB_USER=root
+DB_PASSWORD=yourpassword
+DB_HOST=localhost
 TWELVE_DATA_API_KEY=your_api_key
+JWT_SECRET=your_jwt_secret_min_32_chars
 ```
 
 ```bash
-yarn db:migrate   # 데이터베이스 초기화
-yarn dev          # 개발 서버 실행
+npm run dev          # 개발 서버 실행 (DB 테이블은 실행 시 자동 동기화)
+npm test             # 테스트 (SQLite in-memory, DB 불필요)
 ```
 
 ---

@@ -86,7 +86,7 @@ modelFiles.forEach((file) => {
   const interfaceMatch = content.match(interfaceRegex)
 
   if (interfaceMatch) {
-    const [fullMatch, interfaceName, interfaceBody] = interfaceMatch
+    const [fullMatch, _interfaceName, interfaceBody] = interfaceMatch
 
     if (
       !interfaceBody.includes("createdAt") &&

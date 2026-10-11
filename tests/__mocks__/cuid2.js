@@ -5,5 +5,5 @@ module.exports = {
   createId: () => `test-id-${++counter}`,
   init: () => ({ createId: () => `test-id-${++counter}` }),
   getConstants: () => ({}),
-  isCuid: (id) => typeof id === 'string' && id.startsWith('test-id'),
+  isCuid: (id) => typeof id === "string" && id.startsWith("test-id"),
 }

@@ -30,20 +30,13 @@ export const cleanupDatabase = async () => {
 export const createTestUser = async (
   email: string = "test@example.com",
   password: string = "password123",
-) => {
+): Promise<void> => {
   try {
     const hashedPassword = await bcrypt.hash(password, 10)
-    const [results] = await sequelize.query(
+    await sequelize.query(
       `INSERT INTO users (email, password, createdAt, updatedAt) VALUES (?, ?, datetime('now'), datetime('now'))`,
       { replacements: [email, hashedPassword] },
     )
-
-    const [[user]] = await sequelize.query(
-      `SELECT * FROM users WHERE email = ?`,
-      { replacements: [email] },
-    )
-
-    return user as any
   } catch (error) {
     console.error("createTestUser failed:", error)
     throw error

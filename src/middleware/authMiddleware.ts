@@ -33,7 +33,7 @@ export const authenticateUser = (
     req.user = decoded
     next()
   } catch (err) {
-    logger.warn("인증 실패: 유효하지 않은 토큰", err)
+    logger.warn({ err }, "인증 실패: 유효하지 않은 토큰")
     throw createError(StatusCodes.UNAUTHORIZED, "유효하지 않은 토큰입니다.")
   }
 }

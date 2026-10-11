@@ -17,6 +17,7 @@
     },
     "esModuleInterop": true,
     "resolveJsonModule": true,
+    "outDir": "./dist",
     "skipLibCheck": true,
     "strict": true
   },

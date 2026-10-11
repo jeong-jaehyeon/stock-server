@@ -61,7 +61,7 @@ export const addStockToPortfolioService = async (
     logger.info(`[${symbol}] 매수 기록 생성 완료 (수량: ${quantity})`)
     return { message: `${symbol} 주식을 ${quantity}개 매수 완료.` }
   } catch (error) {
-    logger.error("Error adding stock to portfolio:", error)
+    logger.error({ err: error }, "Error adding stock to portfolio:")
     throw new Error("포트폴리오에 주식을 추가하는 중 오류 발생")
   }
 }
@@ -122,7 +122,7 @@ export const sellStockFromPortfolioService = async (
       profitLoss,
     }
   } catch (error) {
-    logger.error("Error selling stock:", error)
+    logger.error({ err: error }, "Error selling stock:")
     throw new Error("포트폴리오에서 주식을 매도하는 중 오류 발생")
   }
 }

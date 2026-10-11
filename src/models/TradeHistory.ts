@@ -18,10 +18,7 @@ export interface TradeHistoryAttributes {
 export type TradeHistoryPk = "id"
 export type TradeHistoryId = TradeHistory[TradeHistoryPk]
 export type TradeHistoryOptionalAttributes =
-  | "id"
-  | "profitLoss"
-  | "createdAt"
-  | "updatedAt"
+  "id" | "profitLoss" | "createdAt" | "updatedAt"
 export type TradeHistoryCreationAttributes = Optional<
   TradeHistoryAttributes,
   TradeHistoryOptionalAttributes

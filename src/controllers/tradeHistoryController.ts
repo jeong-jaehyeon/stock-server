@@ -24,12 +24,7 @@ export const getUserTradeHistory = async (
 
   const trades = await getUserTradeHistoryService(userId)
 
-  sendSuccessResponse(
-    res,
-    "거래 내역 조회 성공",
-    trades,
-    StatusCodes.OK,
-  )
+  sendSuccessResponse(res, "거래 내역 조회 성공", trades, StatusCodes.OK)
 }
 
 export const getUserTradeHistoryBySymbol = async (
