@@ -103,19 +103,6 @@ export class TradeHistory
         sequelize,
         tableName: "trade_history",
         timestamps: true,
-        indexes: [
-          {
-            name: "PRIMARY",
-            unique: true,
-            using: "BTREE",
-            fields: [{ name: "id" }],
-          },
-          {
-            name: "portfolioId",
-            using: "BTREE",
-            fields: [{ name: "portfolioId" }],
-          },
-        ],
       },
     )
   }

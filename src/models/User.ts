@@ -79,20 +79,6 @@ export class User
         sequelize,
         tableName: "users",
         timestamps: true,
-        indexes: [
-          {
-            name: "PRIMARY",
-            unique: true,
-            using: "BTREE",
-            fields: [{ name: "id" }],
-          },
-          {
-            name: "email",
-            unique: true,
-            using: "BTREE",
-            fields: [{ name: "email" }],
-          },
-        ],
       },
     )
   }

@@ -5,6 +5,8 @@ import createError, { HttpError } from "http-errors"
 import dotenv from "dotenv"
 dotenv.config()
 
+import swaggerUi from "swagger-ui-express"
+import { swaggerSpec } from "@config/swagger"
 import logger from "@utils/logger"
 import { initDatabase } from "@config/db"
 import { StatusCodes } from "@utils/statusCodes"
@@ -28,6 +30,9 @@ export const createServer = async () => {
 
   // 로그
   app.use(requestLogger)
+
+  // API 문서
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
   // 라우트
   app.use("/api/stocks", stockRoutes)
