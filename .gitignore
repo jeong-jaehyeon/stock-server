@@ -1,4 +1,22 @@
-# Node.js 관련 파일 및 폴더 무시
-node_modules
-yarn.lock
-.idea
+# Dependencies
+node_modules/
+
+# Env — never commit real secrets (.env.example만 커밋)
+.env
+.env.*.local
+
+# Build output
+dist/
+
+# Test coverage
+coverage/
+
+# Logs
+*.log
+logs/
+
+# Editor / OS
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
